@@ -115,13 +115,6 @@ goog.scope(function() {
   /**
    * @override
    */
-  pro.getParamsAndGrads = function() {
-    return [];
-  };
-
-  /**
-   * @override
-   */
   pro.toJSON = function() {
     var json = {};
     json.sx = this.sx;

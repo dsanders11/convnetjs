@@ -117,13 +117,6 @@ goog.scope(function() {
   /**
    * @override
    */
-  pro.getParamsAndGrads = function() {
-    return [];
-  };
-
-  /**
-   * @override
-   */
   pro.toJSON = function() {
     var json = {};
     json.out_depth = this.out_depth;
