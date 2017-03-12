@@ -19,11 +19,11 @@ goog.require('convnetjs.SoftmaxLayer');
 goog.require('convnetjs.TanhLayer');
 goog.require('convnetjs.Vol');
 goog.require('convnetjs.util');
+goog.require('goog.asserts');
 
 
 goog.scope(function() {
   var Vol = convnetjs.Vol; // convenience
-  var assert = convnetjs.assert;
 
   /**
    * Net manages a set of layers
@@ -44,8 +44,8 @@ goog.scope(function() {
    */
   pro.makeLayers = function(defs) {
     // few checks
-    assert(defs.length >= 2, 'Error! At least one input layer and one loss layer are required.');
-    assert(defs[0]['type'] === 'input', 'Error! First layer must be the input layer, to declare size of inputs');
+    goog.asserts.assert(defs.length >= 2, 'Error! At least one input layer and one loss layer are required.');
+    goog.asserts.assert(defs[0]['type'] === 'input', 'Error! First layer must be the input layer, to declare size of inputs');
 
     // desugar layer_defs for adding activation, dropout layers etc
     var desugar = function(defs) {
@@ -197,7 +197,7 @@ goog.scope(function() {
     // this is a convenience function for returning the argmax
     // prediction, assuming the last layer of the net is a softmax
     var S = this.layers[this.layers.length-1];
-    assert(S.layer_type === 'softmax', 'getPrediction function assumes softmax as last layer of the net!');
+    goog.asserts.assert(S.layer_type === 'softmax', 'getPrediction function assumes softmax as last layer of the net!');
 
     var p = S.out_act['w'];
     var maxv = p[0];
