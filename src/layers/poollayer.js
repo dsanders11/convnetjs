@@ -49,25 +49,29 @@ goog.scope(function() {
 
     var n=0; // a counter for switches
     for(var d=0;d<this.out_depth;d++) {
-      var x = -this.pad;
-      var y = -this.pad;
+      let x = -this.pad;
       for(var ax=0; ax<this.out_sx; x+=this.stride,ax++) {
-        y = -this.pad;
+        let y = -this.pad;
         for(var ay=0; ay<this.out_sy; y+=this.stride,ay++) {
 
           // convolve centered at this particular location
-          var a = -99999; // hopefully small enough ;\
-          var winx=-1,winy=-1;
+          let a = -99999; // hopefully small enough ;\
+          let winx=-1;
+          let winy=-1;
           for(var fx=0;fx<this.sx;fx++) {
             for(var fy=0;fy<this.sy;fy++) {
-              var oy = y+fy;
-              var ox = x+fx;
+              let oy = y+fy;
+              let ox = x+fx;
               if(oy>=0 && oy<V.sy && ox>=0 && ox<V.sx) {
-                var v = V.get(ox, oy, d);
+                let v = V.get(ox, oy, d);
                 // perform max pooling and store pointers to where
                 // the max came from. This will speed up backprop
                 // and can help make nice visualizations in future
-                if(v > a) { a = v; winx=ox; winy=oy;}
+                if (v > a) {
+                  a = v;
+                  winx=ox;
+                  winy=oy;
+                }
               }
             }
           }
