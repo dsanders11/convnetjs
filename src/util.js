@@ -1,11 +1,4 @@
-goog.provide('convnet.assert');
-goog.provide('convnet.getopt');
-goog.provide('convnet.maxmin');
-goog.provide('convnet.randf');
-goog.provide('convnet.randi');
-goog.provide('convnet.randn');
-goog.provide('convnet.randperm');
-goog.provide('convnet.weightedSample');
+goog.provide('convnetjs.util');
 
 
 goog.scope(function() {
@@ -17,7 +10,7 @@ goog.scope(function() {
    * @return {number}
    * @export
    */
-  function gaussRandom() {
+  convnetjs.gaussRandom = function() {
     if(return_v) {
       return_v = false;
       return v_val;
@@ -25,12 +18,12 @@ goog.scope(function() {
     var u = 2*Math.random()-1;
     var v = 2*Math.random()-1;
     var r = u*u + v*v;
-    if(r == 0 || r > 1) return gaussRandom();
+    if(r == 0 || r > 1) return convnetjs.gaussRandom();
     var c = Math.sqrt(-2*Math.log(r)/r);
     v_val = v*c; // cache this
     return_v = true;
     return u*c;
-  }
+  };
 
   /**
    * @param {number} a
@@ -38,9 +31,9 @@ goog.scope(function() {
    * @return {number}
    * @export
    */
-  function randf(a, b) {
+  convnetjs.randf = function(a, b) {
     return Math.random()*(b-a)+a;
-  }
+  };
 
   /**
    * @param {number} a
@@ -48,9 +41,9 @@ goog.scope(function() {
    * @return {number}
    * @export
    */
-  function randi(a, b) {
+  convnetjs.randi = function(a, b) {
     return Math.floor(Math.random()*(b-a)+a);
-  }
+  };
 
   /**
    * @param {number} mu
@@ -58,9 +51,9 @@ goog.scope(function() {
    * @return {number}
    * @export
    */
-  function randn(mu, std) {
-    return mu+gaussRandom()*std;
-  }
+  convnetjs.randn = function(mu, std) {
+    return mu+convnetjs.gaussRandom()*std;
+  };
 
   /**
    * return max and min of a given non-empty array.
@@ -68,7 +61,7 @@ goog.scope(function() {
    * @return {Object}
    * @export
    */
-  function maxmin(w) {
+  convnetjs.maxmin = function(w) {
     if(w.length === 0) { return {}; } // ... ;s
     var maxv = w[0];
     var minv = w[0];
@@ -80,14 +73,14 @@ goog.scope(function() {
       if(w[i] < minv) { minv = w[i]; mini = i; }
     }
     return {maxi: maxi, maxv: maxv, mini: mini, minv: minv, dv:maxv-minv};
-  }
+  };
 
   /**
    * create random permutation of numbers, in range [0...n-1]
    * @param {number} n
    * @return {Array.<number>}
    */
-  function randperm(n) {
+  convnetjs.randperm = function(n) {
     var i = n,
         j = 0,
         temp;
@@ -100,7 +93,7 @@ goog.scope(function() {
         array[j] = temp;
     }
     return array;
-  }
+  };
 
   /**
    * sample from list lst according to probabilities in list probs
@@ -110,14 +103,14 @@ goog.scope(function() {
    * @return {number}
    * @export
    */
-  function weightedSample(lst, probs) {
-    var p = randf(0, 1.0);
+  convnetjs.weightedSample = function(lst, probs) {
+    var p = convnetjs.randf(0, 1.0);
     var cumprob = 0.0;
     for(var k=0,n=lst.length;k<n;k++) {
       cumprob += probs[k];
       if(p < cumprob) { return lst[k]; }
     }
-  }
+  };
 
   /**
    * syntactic sugar function for getting default parameter values
@@ -127,7 +120,7 @@ goog.scope(function() {
    * @return {*}
    * @export
    */
-  function getopt(opt, field_name, default_value) {
+  convnetjs.getopt = function(opt, field_name, default_value) {
     if(typeof field_name === 'string') {
       // case of single string
       return (typeof opt[field_name] !== 'undefined') ? opt[field_name] : default_value;
@@ -142,14 +135,14 @@ goog.scope(function() {
       }
       return ret;
     }
-  }
+  };
 
   /**
    * @param {boolean} condition
    * @param {string} message
    * @export
    */
-  function assert(condition, message) {
+  convnetjs.assert = function(condition, message) {
     if (!condition) {
       message = message || "Assertion failed";
       if (typeof Error !== "undefined") {
@@ -157,5 +150,5 @@ goog.scope(function() {
       }
       throw message; // Fallback
     }
-  }
+  };
 });

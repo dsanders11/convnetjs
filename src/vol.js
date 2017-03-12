@@ -1,5 +1,11 @@
-goog.provide('convnet.Vol');
-goog.require('convnet.randn');
+/**
+ * @fileoverview
+ * @suppress {extraRequire}
+ */
+goog.provide('convnetjs.Vol');
+goog.require('convnetjs.JSONSerializable');
+goog.require('convnetjs.util');
+
 
 goog.scope(function() {
   /**
@@ -12,9 +18,10 @@ goog.scope(function() {
    * with. If c is missing, fills the Vol with random numbers.
    *
    * @constructor
+   * @implements {convnetjs.JSONSerializable}
    * @export
    */
-  convnet.Vol = function(sx, sy, depth, c) {
+  convnetjs.Vol = function(sx, sy, depth, c) {
     // this is how you check if a variable is an array. Oh, Javascript :)
     if(Object.prototype.toString.call(sx) === '[object Array]') {
       // we were given a list in sx, assume 1D volume and fill it up
@@ -42,7 +49,7 @@ goog.scope(function() {
         // of incoming connections have outputs of larger variance
         var scale = Math.sqrt(1.0/(sx*sy*depth));
         for(var i=0;i<n;i++) {
-          this.w[i] = convnet.randn(0.0, scale);
+          this.w[i] = convnetjs.randn(0.0, scale);
         }
       } else {
         for(var i=0;i<n;i++) {
@@ -51,65 +58,113 @@ goog.scope(function() {
       }
     }
   };
+  var pro = convnetjs.Vol.prototype;
 
-  convnet.Vol.prototype = {
-    get: function(x, y, d) {
-      var ix=((this.sx * y)+x)*this.depth+d;
-      return this.w[ix];
-    },
-    set: function(x, y, d, v) {
-      var ix=((this.sx * y)+x)*this.depth+d;
-      this.w[ix] = v;
-    },
-    add: function(x, y, d, v) {
-      var ix=((this.sx * y)+x)*this.depth+d;
-      this.w[ix] += v;
-    },
-    get_grad: function(x, y, d) {
-      var ix = ((this.sx * y)+x)*this.depth+d;
-      return this.dw[ix];
-    },
-    set_grad: function(x, y, d, v) {
-      var ix = ((this.sx * y)+x)*this.depth+d;
-      this.dw[ix] = v;
-    },
-    add_grad: function(x, y, d, v) {
-      var ix = ((this.sx * y)+x)*this.depth+d;
-      this.dw[ix] += v;
-    },
-    cloneAndZero: function() { return new convnet.Vol(this.sx, this.sy, this.depth, 0.0); },
-    clone: function() {
-      var V = new convnet.Vol(this.sx, this.sy, this.depth, 0.0);
-      var n = this.w.length;
-      for(var i=0;i<n;i++) { V.w[i] = this.w[i]; }
-      return V;
-    },
-    addFrom: function(V) { for(var k=0;k<this.w.length;k++) { this.w[k] += V.w[k]; }},
-    addFromScaled: function(V, a) { for(var k=0;k<this.w.length;k++) { this.w[k] += a*V.w[k]; }},
-    setConst: function(a) { for(var k=0;k<this.w.length;k++) { this.w[k] = a; }},
+  pro.get = function(x, y, d) {
+    var ix=((this.sx * y)+x)*this.depth+d;
+    return this.w[ix];
+  };
 
-    toJSON: function() {
-      // todo: we may want to only save d most significant digits to save space
-      var json = {};
-      json.sx = this.sx;
-      json.sy = this.sy;
-      json.depth = this.depth;
-      json.w = this.w;
-      return json;
-      // we wont back up gradients to save space
-    },
-    fromJSON: function(json) {
-      this.sx = json.sx;
-      this.sy = json.sy;
-      this.depth = json.depth;
+  pro.set = function(x, y, d, v) {
+    var ix=((this.sx * y)+x)*this.depth+d;
+    this.w[ix] = v;
+  };
 
-      var n = this.sx*this.sy*this.depth;
-      this.w = new Float64Array(n);
-      this.dw = new Float64Array(n);
-      // copy over the elements.
-      for(var i=0;i<n;i++) {
-        this.w[i] = json.w[i];
-      }
+  pro.add = function(x, y, d, v) {
+    var ix=((this.sx * y)+x)*this.depth+d;
+    this.w[ix] += v;
+  };
+
+  pro.get_grad = function(x, y, d) {
+    var ix = ((this.sx * y)+x)*this.depth+d;
+    return this.dw[ix];
+  };
+
+  pro.set_grad = function(x, y, d, v) {
+    var ix = ((this.sx * y)+x)*this.depth+d;
+    this.dw[ix] = v;
+  };
+
+  pro.add_grad = function(x, y, d, v) {
+    var ix = ((this.sx * y)+x)*this.depth+d;
+    this.dw[ix] += v;
+  };
+
+  /**
+   * @return {!convnetjs.Vol}
+   */
+  pro.cloneAndZero = function() {
+    return new convnetjs.Vol(this.sx, this.sy, this.depth, 0.0);
+  };
+
+  /**
+   * @return {!convnetjs.Vol}
+   */
+  pro.clone = function() {
+    var V = new convnetjs.Vol(this.sx, this.sy, this.depth, 0.0);
+    var n = this.w.length;
+    for(var i=0;i<n;i++) {
+      V.w[i] = this.w[i];
+    }
+    return V;
+  };
+
+  /**
+   * @param {!convnetjs.Vol} V
+   */
+  pro.addFrom = function(V) {
+    for(var k=0;k<this.w.length;k++) {
+      this.w[k] += V.w[k];
+    }
+  };
+
+  /**
+   * @param {!convnetjs.Vol} V
+   * @param {number} a
+   */
+  pro.addFromScaled = function(V, a) {
+    for(var k=0;k<this.w.length;k++) {
+      this.w[k] += a*V.w[k];
+    }
+  };
+
+  /**
+   * @param {number} a
+   */
+  pro.setConst = function(a) {
+    for(var k=0;k<this.w.length;k++) {
+      this.w[k] = a;
+    }
+  };
+
+  /**
+   * @override
+   */
+  pro.toJSON = function() {
+    // todo: we may want to only save d most significant digits to save space
+    var json = {};
+    json.sx = this.sx;
+    json.sy = this.sy;
+    json.depth = this.depth;
+    json.w = this.w;
+    return json;
+    // we wont back up gradients to save space
+  };
+
+  /**
+   * @override
+   */
+  pro.fromJSON = function(json) {
+    this.sx = json.sx;
+    this.sy = json.sy;
+    this.depth = json.depth;
+
+    var n = this.sx*this.sy*this.depth;
+    this.w = new Float64Array(n);
+    this.dw = new Float64Array(n);
+    // copy over the elements.
+    for(var i=0;i<n;i++) {
+      this.w[i] = json.w[i];
     }
   };
 });
