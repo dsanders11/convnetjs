@@ -41,10 +41,15 @@ goog.scope(function() {
 
   /**
    * @override
-   * @abstract
    * @export
    */
-  convnetjs.LossLayer.prototype.fromJSON = function(json) { };
+  convnetjs.LossLayer.prototype.fromJSON = function(json) {
+    this.out_depth = /** @type {number} */ (json.out_depth);
+    this.out_sx = /** @type {number} */ (json.out_sx);
+    this.out_sy = /** @type {number} */ (json.out_sy);
+    this.layer_type = /** @type {string} */ (json.layer_type);
+    this.num_inputs = /** @type {number} */ (json.num_inputs);
+  };
 
   /**
    * @override
