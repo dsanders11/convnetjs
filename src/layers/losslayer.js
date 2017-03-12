@@ -23,7 +23,7 @@ goog.scope(function() {
 
   /**
    * backprop: compute gradients wrt all parameters
-   * @param {(Array|Float32Array|number|Object)} y
+   * @param {(Array|Float64Array|number|Object)} y
    * @return {number}
    * @abstract
    */

@@ -42,7 +42,7 @@ goog.scope(function() {
     }
 
     // compute exponentials (carefully to not blow up)
-    var es = new Float32Array(this.out_depth);
+    var es = new Float64Array(this.out_depth);
     var esum = 0.0;
     for(var i=0;i<this.out_depth;i++) {
       var e = Math.exp(as[i] - amax);
@@ -67,7 +67,7 @@ goog.scope(function() {
   pro.backward = function(y) {
     // compute and accumulate gradient wrt weights and bias of this layer
     var x = this.in_act;
-    x.dw = new Float32Array(x.w.length); // zero out the gradient of input Vol
+    x.dw = new Float64Array(x.w.length); // zero out the gradient of input Vol
 
     for(var i=0;i<this.out_depth;i++) {
       var indicator = i === y ? 1.0 : 0.0;

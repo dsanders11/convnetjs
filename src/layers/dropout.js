@@ -58,7 +58,7 @@ goog.scope(function() {
     var V = this.in_act; // we need to set dw of this
     var chain_grad = this.out_act;
     var N = V.w.length;
-    V.dw = new Float32Array(N); // zero out gradient wrt data
+    V.dw = new Float64Array(N); // zero out gradient wrt data
     for(var i=0;i<N;i++) {
       if(!(this.dropped[i])) {
         V.dw[i] = chain_grad.dw[i]; // copy over the gradient

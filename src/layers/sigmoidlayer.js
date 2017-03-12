@@ -47,7 +47,7 @@ goog.scope(function() {
     var V = this.in_act; // we need to set dw of this
     var V2 = this.out_act;
     var N = V.w.length;
-    V.dw = new Float32Array(N); // zero out gradient wrt data
+    V.dw = new Float64Array(N); // zero out gradient wrt data
     for(var i=0;i<N;i++) {
       var v2wi = V2.w[i];
       V.dw[i] =  v2wi * (1.0 - v2wi) * V2.dw[i];

@@ -94,7 +94,7 @@ goog.scope(function() {
    */
   pro.backward = function() {
     var V = this.in_act;
-    V.dw = new Float32Array(V.w.length); // zero out gradient wrt bottom data, we're about to fill it
+    V.dw = new Float64Array(V.w.length); // zero out gradient wrt bottom data, we're about to fill it
 
     var V_sx = V.sx |0;
     var V_sy = V.sy |0;

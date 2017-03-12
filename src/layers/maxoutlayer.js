@@ -26,7 +26,7 @@ goog.scope(function() {
     this.out_depth = Math.floor(opt.in_depth / this.group_size);
     this.layer_type = 'maxout';
 
-    this.switches = new Float32Array(this.out_sx*this.out_sy*this.out_depth); // useful for backprop
+    this.switches = new Float64Array(this.out_sx*this.out_sy*this.out_depth); // useful for backprop
   };
   goog.inherits(convnetjs.MaxoutLayer, convnetjs.Layer);
   var pro = convnetjs.MaxoutLayer.prototype;
@@ -91,7 +91,7 @@ goog.scope(function() {
     var V = this.in_act; // we need to set dw of this
     var V2 = this.out_act;
     var N = this.out_depth;
-    V.dw = new Float32Array(V.w.length); // zero out gradient wrt data
+    V.dw = new Float64Array(V.w.length); // zero out gradient wrt data
 
     // pass the gradient through the appropriate switch
     if(this.out_sx === 1 && this.out_sy === 1) {
@@ -141,6 +141,6 @@ goog.scope(function() {
     goog.base(this, 'fromJSON', json);
 
     this.group_size = json.group_size;
-    this.switches = new Float32Array(this.group_size);
+    this.switches = new Float64Array(this.group_size);
   };
 });

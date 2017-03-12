@@ -63,7 +63,7 @@ goog.scope(function() {
    */
   pro.backward = function() {
     var V = this.in_act;
-    V.dw = new Float32Array(V.w.length); // zero out the gradient in input Vol
+    V.dw = new Float64Array(V.w.length); // zero out the gradient in input Vol
 
     // compute gradient wrt weights and data
     for(var i=0;i<this.out_depth;i++) {

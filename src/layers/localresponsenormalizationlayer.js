@@ -73,7 +73,7 @@ goog.scope(function() {
   pro.backward = function() {
     // evaluate gradient wrt data
     var V = this.in_act; // we need to set dw of this
-    V.dw = new Float32Array(V.w.length); // zero out gradient wrt data
+    V.dw = new Float64Array(V.w.length); // zero out gradient wrt data
 
     var n2 = Math.floor(this.n/2);
     for(var x=0;x<V.sx;x++) {
