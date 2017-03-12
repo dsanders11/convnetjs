@@ -99,7 +99,7 @@ goog.scope(function() {
       pv.push(p[i]/255.0-0.5); // normalize image pixels to [-0.5, 0.5]
     }
     var x = new convnetjs.Vol(W, H, 4, 0.0); //input volume (image)
-    x.w = pv;
+    x['w'] = pv;
 
     if(convert_grayscale) {
       // flatten into depth=1 array

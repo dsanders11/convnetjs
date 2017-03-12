@@ -16,18 +16,18 @@ goog.scope(function() {
     opt = opt || {};
 
     // required
-    this.out_depth = opt.filters;
-    this.sx = opt.sx; // filter size. Should be odd if possible, it's cleaner.
-    this.in_depth = /** @type {number} */ (opt.in_depth);
-    this.in_sx = /** @type {number} */ (opt.in_sx);
-    this.in_sy = /** @type {number} */ (opt.in_sy);
+    this.out_depth = opt['filters'];
+    this.sx = opt['sx']; // filter size. Should be odd if possible, it's cleaner.
+    this.in_depth = /** @type {number} */ (opt['in_depth']);
+    this.in_sx = /** @type {number} */ (opt['in_sx']);
+    this.in_sy = /** @type {number} */ (opt['in_sy']);
 
     // optional
-    this.sy = typeof opt.sy !== 'undefined' ? opt.sy : this.sx;
-    this.stride = typeof opt.stride !== 'undefined' ? opt.stride : 1; // stride at which we apply filters to input volume
-    this.pad = typeof opt.pad !== 'undefined' ? opt.pad : 0; // amount of 0 padding to add around borders of input volume
-    this.l1_decay_mul = typeof opt.l1_decay_mul !== 'undefined' ? opt.l1_decay_mul : 0.0;
-    this.l2_decay_mul = typeof opt.l2_decay_mul !== 'undefined' ? opt.l2_decay_mul : 1.0;
+    this.sy = typeof opt['sy'] !== 'undefined' ? opt['sy'] : this.sx;
+    this.stride = typeof opt['stride'] !== 'undefined' ? opt['stride'] : 1; // stride at which we apply filters to input volume
+    this.pad = typeof opt['pad'] !== 'undefined' ? opt['pad'] : 0; // amount of 0 padding to add around borders of input volume
+    this.l1_decay_mul = typeof opt['l1_decay_mul'] !== 'undefined' ? opt['l1_decay_mul'] : 0.0;
+    this.l2_decay_mul = typeof opt['l2_decay_mul'] !== 'undefined' ? opt['l2_decay_mul'] : 1.0;
 
     // computed
     // note we are doing floor, so if the strided convolution of the filter doesnt fit into the input
@@ -38,7 +38,7 @@ goog.scope(function() {
     this.layer_type = 'conv';
 
     // initializations
-    var bias = typeof opt.bias_pref !== 'undefined' ? opt.bias_pref : 0.0;
+    var bias = typeof opt['bias_pref'] !== 'undefined' ? opt['bias_pref'] : 0.0;
     this.filters = [];
     for(var i=0;i<this.out_depth;i++) { this.filters.push(new Vol(this.sx, this.sy, this.in_depth)); }
     this.biases = new Vol(1, 1, this.out_depth, bias);
@@ -75,12 +75,12 @@ goog.scope(function() {
               if(oy>=0 && oy<V_sy && ox>=0 && ox<V_sx) {
                 for(var fd=0;fd<f.depth;fd++) {
                   // avoid function call overhead (x2) for efficiency, compromise modularity :(
-                  a += f.w[((f.sx * fy)+fx)*f.depth+fd] * V.w[((V_sx * oy)+ox)*V.depth+fd];
+                  a += f['w'][((f.sx * fy)+fx)*f.depth+fd] * V['w'][((V_sx * oy)+ox)*V.depth+fd];
                 }
               }
             }
           }
-          a += this.biases.w[d];
+          a += this.biases['w'][d];
           A.set(ax, ay, d, a);
         }
       }
@@ -94,7 +94,7 @@ goog.scope(function() {
    */
   pro.backward = function() {
     var V = this.in_act;
-    V.dw = new Float64Array(V.w.length); // zero out gradient wrt bottom data, we're about to fill it
+    V['dw'] = new Float64Array(V['w'].length); // zero out gradient wrt bottom data, we're about to fill it
 
     var V_sx = V.sx |0;
     var V_sy = V.sy |0;
@@ -119,13 +119,13 @@ goog.scope(function() {
                   // avoid function call overhead (x2) for efficiency, compromise modularity :(
                   var ix1 = ((V_sx * oy)+ox)*V.depth+fd;
                   var ix2 = ((f.sx * fy)+fx)*f.depth+fd;
-                  f.dw[ix2] += V.w[ix1]*chain_grad;
-                  V.dw[ix1] += f.w[ix2]*chain_grad;
+                  f['dw'][ix2] += V['w'][ix1]*chain_grad;
+                  V['dw'][ix1] += f['w'][ix2]*chain_grad;
                 }
               }
             }
           }
-          this.biases.dw[d] += chain_grad;
+          this.biases['dw'][d] += chain_grad;
         }
       }
     }
@@ -137,9 +137,9 @@ goog.scope(function() {
   pro.getParamsAndGrads = function() {
     var response = [];
     for(var i=0;i<this.out_depth;i++) {
-      response.push({params: this.filters[i].w, grads: this.filters[i].dw, l2_decay_mul: this.l2_decay_mul, l1_decay_mul: this.l1_decay_mul});
+      response.push({'params': this.filters[i]['w'], 'grads': this.filters[i]['dw'], 'l2_decay_mul': this.l2_decay_mul, 'l1_decay_mul': this.l1_decay_mul});
     }
-    response.push({params: this.biases.w, grads: this.biases.dw, l1_decay_mul: 0.0, l2_decay_mul: 0.0});
+    response.push({'params': this.biases['w'], 'grads': this.biases['dw'], 'l1_decay_mul': 0.0, 'l2_decay_mul': 0.0});
     return response;
   };
 
@@ -149,18 +149,18 @@ goog.scope(function() {
   pro.toJSON = function() {
     var json = goog.base(this, 'toJSON');
 
-    json.sx = this.sx; // filter size in x, y dims
-    json.sy = this.sy;
-    json.stride = this.stride;
-    json.in_depth = this.in_depth;
-    json.l1_decay_mul = this.l1_decay_mul;
-    json.l2_decay_mul = this.l2_decay_mul;
-    json.pad = this.pad;
-    json.filters = [];
+    json['sx'] = this.sx; // filter size in x, y dims
+    json['sy'] = this.sy;
+    json['stride'] = this.stride;
+    json['in_depth'] = this.in_depth;
+    json['l1_decay_mul'] = this.l1_decay_mul;
+    json['l2_decay_mul'] = this.l2_decay_mul;
+    json['pad'] = this.pad;
+    json['filters'] = [];
     for(var i=0;i<this.filters.length;i++) {
-      json.filters.push(this.filters[i].toJSON());
+      json['filters'].push(this.filters[i].toJSON());
     }
-    json.biases = this.biases.toJSON();
+    json['biases'] = this.biases.toJSON();
     return json;
   };
 
@@ -170,20 +170,20 @@ goog.scope(function() {
   pro.fromJSON = function(json) {
     goog.base(this, 'fromJSON', json);
 
-    this.sx = /** @type {number} */ (json.sx); // filter size in x, y dims
-    this.sy = /** @type {number} */ (json.sy);
-    this.stride = /** @type {number} */ (json.stride);
-    this.in_depth = /** @type {number} */ (json.in_depth); // depth of input volume
+    this.sx = /** @type {number} */ (json['sx']); // filter size in x, y dims
+    this.sy = /** @type {number} */ (json['sy']);
+    this.stride = /** @type {number} */ (json['stride']);
+    this.in_depth = /** @type {number} */ (json['in_depth']); // depth of input volume
     this.filters = [];
-    this.l1_decay_mul = typeof json.l1_decay_mul !== 'undefined' ? json.l1_decay_mul : 1.0;
-    this.l2_decay_mul = typeof json.l2_decay_mul !== 'undefined' ? json.l2_decay_mul : 1.0;
-    this.pad = typeof json.pad !== 'undefined' ? json.pad : 0;
-    for(var i=0;i<json.filters.length;i++) {
+    this.l1_decay_mul = typeof json['l1_decay_mul'] !== 'undefined' ? json['l1_decay_mul'] : 1.0;
+    this.l2_decay_mul = typeof json['l2_decay_mul'] !== 'undefined' ? json['l2_decay_mul'] : 1.0;
+    this.pad = typeof json['pad'] !== 'undefined' ? json['pad'] : 0;
+    for(var i=0;i<json['filters'].length;i++) {
       var v = new Vol(0,0,0,0);
-      v.fromJSON(json.filters[i]);
+      v.fromJSON(json['filters'][i]);
       this.filters.push(v);
     }
     this.biases = new Vol(0,0,0,0);
-    this.biases.fromJSON(json.biases);
+    this.biases.fromJSON(json['biases']);
   };
 });

@@ -18,12 +18,12 @@ goog.scope(function() {
     opt = opt || {};
 
     // required
-    this.group_size = typeof opt.group_size !== 'undefined' ? opt.group_size : 2;
+    this.group_size = typeof opt['group_size'] !== 'undefined' ? opt['group_size'] : 2;
 
     // computed
-    this.out_sx = opt.in_sx;
-    this.out_sy = opt.in_sy;
-    this.out_depth = Math.floor(opt.in_depth / this.group_size);
+    this.out_sx = opt['in_sx'];
+    this.out_sy = opt['in_sy'];
+    this.out_depth = Math.floor(opt['in_depth'] / this.group_size);
     this.layer_type = 'maxout';
 
     this.switches = new Float64Array(this.out_sx*this.out_sy*this.out_depth); // useful for backprop
@@ -45,16 +45,16 @@ goog.scope(function() {
     if(this.out_sx === 1 && this.out_sy === 1) {
       for(var i=0;i<N;i++) {
         var ix = i * this.group_size; // base index offset
-        var a = V.w[ix];
+        var a = V['w'][ix];
         var ai = 0;
         for(var j=1;j<this.group_size;j++) {
-          var a2 = V.w[ix+j];
+          var a2 = V['w'][ix+j];
           if(a2 > a) {
             a = a2;
             ai = j;
           }
         }
-        V2.w[i] = a;
+        V2['w'][i] = a;
         this.switches[i] = ix + ai;
       }
     } else {
@@ -91,13 +91,13 @@ goog.scope(function() {
     var V = this.in_act; // we need to set dw of this
     var V2 = this.out_act;
     var N = this.out_depth;
-    V.dw = new Float64Array(V.w.length); // zero out gradient wrt data
+    V['dw'] = new Float64Array(V['w'].length); // zero out gradient wrt data
 
     // pass the gradient through the appropriate switch
     if(this.out_sx === 1 && this.out_sy === 1) {
       for(var i=0;i<N;i++) {
-        var chain_grad = V2.dw[i];
-        V.dw[this.switches[i]] = chain_grad;
+        var chain_grad = V2['dw'][i];
+        V['dw'][this.switches[i]] = chain_grad;
       }
     } else {
       // bleh okay, lets do this the hard way
@@ -120,7 +120,7 @@ goog.scope(function() {
   pro.toJSON = function() {
     var json = goog.base(this, 'toJSON');
 
-    json.group_size = this.group_size;
+    json['group_size'] = this.group_size;
     return json;
   };
 
@@ -130,7 +130,7 @@ goog.scope(function() {
   pro.fromJSON = function(json) {
     goog.base(this, 'fromJSON', json);
 
-    this.group_size = json.group_size;
+    this.group_size = json['group_size'];
     this.switches = new Float64Array(this.group_size);
   };
 });

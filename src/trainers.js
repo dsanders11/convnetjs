@@ -19,18 +19,18 @@ goog.scope(function() {
   convnetjs.Trainer = function(net, opt) {
     this.net = net;
 
-    var options = opt || {};
-    this.learning_rate = typeof options.learning_rate !== 'undefined' ? options.learning_rate : 0.01;
-    this.l1_decay = typeof options.l1_decay !== 'undefined' ? options.l1_decay : 0.0;
-    this.l2_decay = typeof options.l2_decay !== 'undefined' ? options.l2_decay : 0.0;
-    this.batch_size = typeof options.batch_size !== 'undefined' ? options.batch_size : 1;
-    this.method = typeof options.method !== 'undefined' ? options.method : 'sgd'; // sgd/adam/adagrad/adadelta/windowgrad/netsterov
+    opt = opt || {};
+    this.learning_rate = typeof opt['learning_rate'] !== 'undefined' ? opt['learning_rate'] : 0.01;
+    this.l1_decay = typeof opt['l1_decay'] !== 'undefined' ? opt['l1_decay'] : 0.0;
+    this.l2_decay = typeof opt['l2_decay'] !== 'undefined' ? opt['l2_decay'] : 0.0;
+    this.batch_size = typeof opt['batch_size'] !== 'undefined' ? opt['batch_size'] : 1;
+    this.method = typeof opt['method'] !== 'undefined' ? opt['method'] : 'sgd'; // sgd/adam/adagrad/adadelta/windowgrad/netsterov
 
-    this.momentum = typeof options.momentum !== 'undefined' ? options.momentum : 0.9;
-    this.ro = typeof options.ro !== 'undefined' ? options.ro : 0.95; // used in adadelta
-    this.eps = typeof options.eps !== 'undefined' ? options.eps : 1e-8; // used in adam or adadelta
-    this.beta1 = typeof options.beta1 !== 'undefined' ? options.beta1 : 0.9; // used in adam
-    this.beta2 = typeof options.beta2 !== 'undefined' ? options.beta2 : 0.999; // used in adam
+    this.momentum = typeof opt['momentum'] !== 'undefined' ? opt['momentum'] : 0.9;
+    this.ro = typeof opt['ro'] !== 'undefined' ? opt['ro'] : 0.95; // used in adadelta
+    this.eps = typeof opt['eps'] !== 'undefined' ? opt['eps'] : 1e-8; // used in adam or adadelta
+    this.beta1 = typeof opt['beta1'] !== 'undefined' ? opt['beta1'] : 0.9; // used in adam
+    this.beta2 = typeof opt['beta2'] !== 'undefined' ? opt['beta2'] : 0.999; // used in adam
 
     this.k = 0; // iteration counter
     this.gsum = []; // last iteration gradients (used for momentum calculations)
@@ -77,9 +77,9 @@ goog.scope(function() {
         // adagrad needs gsum
         // adam and adadelta needs gsum and xsum
         for(var i=0;i<pglist.length;i++) {
-          this.gsum.push(new Float32Array(pglist[i].params.length));
+          this.gsum.push(new Float32Array(pglist[i]['params'].length));
           if(this.method === 'adam' || this.method === 'adadelta') {
-            this.xsum.push(new Float32Array(pglist[i].params.length));
+            this.xsum.push(new Float32Array(pglist[i]['params'].length));
           } else {
             this.xsum.push([]); // conserve memory
           }
@@ -89,12 +89,12 @@ goog.scope(function() {
       // perform an update for all sets of weights
       for(var i=0;i<pglist.length;i++) {
         var pg = pglist[i]; // param, gradient, other options in future (custom learning rate etc)
-        var p = pg.params;
-        var g = pg.grads;
+        var p = pg['params'];
+        var g = pg['grads'];
 
         // learning rate for some parameters.
-        var l2_decay_mul = typeof pg.l2_decay_mul !== 'undefined' ? pg.l2_decay_mul : 1.0;
-        var l1_decay_mul = typeof pg.l1_decay_mul !== 'undefined' ? pg.l1_decay_mul : 1.0;
+        var l2_decay_mul = typeof pg['l2_decay_mul'] !== 'undefined' ? pg['l2_decay_mul'] : 1.0;
+        var l1_decay_mul = typeof pg['l1_decay_mul'] !== 'undefined' ? pg['l1_decay_mul'] : 1.0;
         var l2_decay = this.l2_decay * l2_decay_mul;
         var l1_decay = this.l1_decay * l1_decay_mul;
 
@@ -160,10 +160,10 @@ goog.scope(function() {
     // in future, TODO: have to completely redo the way loss is done around the network as currently
     // loss is a bit of a hack. Ideally, user should specify arbitrary number of loss functions on any layer
     // and it should all be computed correctly and automatically.
-    return {fwd_time: fwd_time, bwd_time: bwd_time,
-            l2_decay_loss: l2_decay_loss, l1_decay_loss: l1_decay_loss,
-            cost_loss: cost_loss, softmax_loss: cost_loss,
-            loss: cost_loss + l1_decay_loss + l2_decay_loss};
+    return {'fwd_time': fwd_time, 'bwd_time': bwd_time,
+            'l2_decay_loss': l2_decay_loss, 'l1_decay_loss': l1_decay_loss,
+            'cost_loss': cost_loss, 'softmax_loss': cost_loss,
+            'loss': cost_loss + l1_decay_loss + l2_decay_loss};
   };
 
   convnetjs.SGDTrainer = convnetjs.Trainer; // backwards compatibility

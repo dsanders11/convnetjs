@@ -45,7 +45,7 @@ goog.scope(function() {
   pro.makeLayers = function(defs) {
     // few checks
     assert(defs.length >= 2, 'Error! At least one input layer and one loss layer are required.');
-    assert(defs[0].type === 'input', 'Error! First layer must be the input layer, to declare size of inputs');
+    assert(defs[0]['type'] === 'input', 'Error! First layer must be the input layer, to declare size of inputs');
 
     // desugar layer_defs for adding activation, dropout layers etc
     var desugar = function(defs) {
@@ -53,23 +53,23 @@ goog.scope(function() {
       for(var i=0;i<defs.length;i++) {
         var def = defs[i];
 
-        if(def.type==='softmax' || def.type==='svm') {
+        if(def['type']==='softmax' || def['type']==='svm') {
           // add an fc layer here, there is no reason the user should
           // have to worry about this and we almost always want to
-          new_defs.push({type:'fc', num_neurons: def.num_classes});
+          new_defs.push({'type':'fc', 'num_neurons': def['num_classes']});
         }
 
-        if(def.type==='regression') {
+        if(def['type']==='regression') {
           // add an fc layer here, there is no reason the user should
           // have to worry about this and we almost always want to
-          new_defs.push({type:'fc', num_neurons: def.num_neurons});
+          new_defs.push({'type':'fc', 'num_neurons': def['num_neurons']});
         }
 
-        if((def.type==='fc' || def.type==='conv')
-            && typeof(def.bias_pref) === 'undefined'){
-          def.bias_pref = 0.0;
-          if(typeof def.activation !== 'undefined' && def.activation === 'relu') {
-            def.bias_pref = 0.1; // relus like a bit of positive bias to get gradients early
+        if((def['type']==='fc' || def['type']==='conv')
+            && typeof(def['bias_pref']) === 'undefined'){
+          def['bias_pref'] = 0.0;
+          if(typeof def['activation'] !== 'undefined' && def['activation'] === 'relu') {
+            def['bias_pref'] = 0.1; // relus like a bit of positive bias to get gradients early
             // otherwise it's technically possible that a relu unit will never turn on (by chance)
             // and will never get any gradient and never contribute any computation. Dead relu.
           }
@@ -77,19 +77,19 @@ goog.scope(function() {
 
         new_defs.push(def);
 
-        if(typeof def.activation !== 'undefined') {
-          if(def.activation==='relu') { new_defs.push({type:'relu'}); }
-          else if (def.activation==='sigmoid') { new_defs.push({type:'sigmoid'}); }
-          else if (def.activation==='tanh') { new_defs.push({type:'tanh'}); }
-          else if (def.activation==='maxout') {
+        if(typeof def['activation'] !== 'undefined') {
+          if(def['activation']==='relu') { new_defs.push({'type':'relu'}); }
+          else if (def['activation']==='sigmoid') { new_defs.push({'type':'sigmoid'}); }
+          else if (def['activation']==='tanh') { new_defs.push({'type':'tanh'}); }
+          else if (def['activation']==='maxout') {
             // create maxout activation, and pass along group size, if provided
-            var gs = def.group_size !== 'undefined' ? def.group_size : 2;
-            new_defs.push({type:'maxout', group_size:gs});
+            var gs = def['group_size'] !== 'undefined' ? def['group_size'] : 2;
+            new_defs.push({'type':'maxout', 'group_size':gs});
           }
-          else { console.log('ERROR unsupported activation ' + def.activation); }
+          else { console.log('ERROR unsupported activation ' + def['activation']); }
         }
-        if(typeof def.drop_prob !== 'undefined' && def.type !== 'dropout') {
-          new_defs.push({type:'dropout', drop_prob: def.drop_prob});
+        if(typeof def['drop_prob'] !== 'undefined' && def['type'] !== 'dropout') {
+          new_defs.push({'type':'dropout', 'drop_prob': def['drop_prob']});
         }
 
       }
@@ -103,9 +103,9 @@ goog.scope(function() {
       var def = defs[i];
       if(i>0) {
         var prev = this.layers[i-1];
-        def.in_sx = prev.out_sx;
-        def.in_sy = prev.out_sy;
-        def.in_depth = prev.out_depth;
+        def['in_sx'] = prev.out_sx;
+        def['in_sy'] = prev.out_sy;
+        def['in_depth'] = prev.out_depth;
       }
 
       switch(def.type) {
@@ -122,7 +122,7 @@ goog.scope(function() {
         case 'tanh': this.layers.push(new convnetjs.TanhLayer(def)); break;
         case 'maxout': this.layers.push(new convnetjs.MaxoutLayer(def)); break;
         case 'svm': this.layers.push(new convnetjs.SVMLayer(def)); break;
-        default: console.log('ERROR: UNRECOGNIZED LAYER TYPE: ' + def.type);
+        default: console.log('ERROR: UNRECOGNIZED LAYER TYPE: ' + def['type']);
       }
     }
   };
@@ -199,7 +199,7 @@ goog.scope(function() {
     var S = this.layers[this.layers.length-1];
     assert(S.layer_type === 'softmax', 'getPrediction function assumes softmax as last layer of the net!');
 
-    var p = S.out_act.w;
+    var p = S.out_act['w'];
     var maxv = p[0];
     var maxi = 0;
     for(var i=1;i<p.length;i++) {
@@ -214,9 +214,9 @@ goog.scope(function() {
    */
   pro.toJSON = function() {
     var json = {};
-    json.layers = [];
+    json['layers'] = [];
     for(var i=0;i<this.layers.length;i++) {
-      json.layers.push(this.layers[i].toJSON());
+      json['layers'].push(this.layers[i].toJSON());
     }
     return json;
   };
@@ -227,9 +227,9 @@ goog.scope(function() {
    */
   pro.fromJSON = function(json) {
     this.layers = [];
-    for(var i=0;i<json.layers.length;i++) {
-      var Lj = json.layers[i];
-      var t = Lj.layer_type;
+    for(var i=0;i<json['layers'].length;i++) {
+      var Lj = json['layers'][i];
+      var t = Lj['layer_type'];
       var L;
       if(t==='input') { L = new convnetjs.InputLayer(); }
       if(t==='relu') { L = new convnetjs.ReluLayer(); }

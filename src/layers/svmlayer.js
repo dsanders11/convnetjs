@@ -22,21 +22,21 @@ goog.scope(function() {
   pro.backward = function(y) {
     // compute and accumulate gradient wrt weights and bias of this layer
     var x = this.in_act;
-    x.dw = new Float64Array(x.w.length); // zero out the gradient of input Vol
+    x['dw'] = new Float64Array(x['w'].length); // zero out the gradient of input Vol
 
     // we're using structured loss here, which means that the score
     // of the ground truth should be higher than the score of any other
     // class, by a margin
-    var yscore = x.w[y]; // score of ground truth
+    var yscore = x['w'][y]; // score of ground truth
     var margin = 1.0;
     var loss = 0.0;
     for(var i=0;i<this.out_depth;i++) {
       if(y === i) { continue; }
-      var ydiff = -yscore + x.w[i] + margin;
+      var ydiff = -yscore + x['w'][i] + margin;
       if(ydiff > 0) {
         // violating dimension, apply loss
-        x.dw[i] += 1;
-        x.dw[y] -= 1;
+        x['dw'][i] += 1;
+        x['dw'][y] -= 1;
         loss += ydiff;
       }
     }

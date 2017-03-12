@@ -41,10 +41,10 @@ goog.scope(function() {
    * @export
    */
   convnetjs.Layer.prototype.fromJSON = function(json) {
-    this.out_depth = /** @type {number} */ (json.out_depth);
-    this.out_sx = /** @type {number} */ (json.out_sx);
-    this.out_sy = /** @type {number} */ (json.out_sy);
-    this.layer_type = /** @type {number} */ (json.layer_type);
+    this.out_depth = /** @type {number} */ (json['out_depth']);
+    this.out_sx = /** @type {number} */ (json['out_sx']);
+    this.out_sy = /** @type {number} */ (json['out_sy']);
+    this.layer_type = /** @type {number} */ (json['layer_type']);
   };
 
   /**
@@ -53,10 +53,10 @@ goog.scope(function() {
    */
   convnetjs.Layer.prototype.toJSON = function() {
     var json = {};
-    json.out_depth = this.out_depth;
-    json.out_sx = this.out_sx;
-    json.out_sy = this.out_sy;
-    json.layer_type = this.layer_type;
+    json['out_depth'] = this.out_depth;
+    json['out_sx'] = this.out_sx;
+    json['out_sy'] = this.out_sy;
+    json['layer_type'] = this.layer_type;
     return json;
   };
 });

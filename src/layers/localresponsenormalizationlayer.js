@@ -16,15 +16,15 @@ goog.scope(function() {
     opt = opt || {};
 
     // required
-    this.k = opt.k;
-    this.n = opt.n;
-    this.alpha = opt.alpha;
-    this.beta = opt.beta;
+    this.k = opt['k'];
+    this.n = opt['n'];
+    this.alpha = opt['alpha'];
+    this.beta = opt['beta'];
 
     // computed
-    this.out_sx = opt.in_sx;
-    this.out_sy = opt.in_sy;
-    this.out_depth = opt.in_depth;
+    this.out_sx = opt['in_sx'];
+    this.out_sy = opt['in_sy'];
+    this.out_depth = opt['in_depth'];
     this.layer_type = 'lrn';
 
     // checks
@@ -73,7 +73,7 @@ goog.scope(function() {
   pro.backward = function() {
     // evaluate gradient wrt data
     var V = this.in_act; // we need to set dw of this
-    V.dw = new Float64Array(V.w.length); // zero out gradient wrt data
+    V['dw'] = new Float64Array(V['w'].length); // zero out gradient wrt data
 
     var n2 = Math.floor(this.n/2);
     for(var x=0;x<V.sx;x++) {
@@ -105,10 +105,10 @@ goog.scope(function() {
   pro.toJSON = function() {
     var json = goog.base(this, 'toJSON');
 
-    json.k = this.k;
-    json.n = this.n;
-    json.alpha = this.alpha; // normalize by size
-    json.beta = this.beta;
+    json['k'] = this.k;
+    json['n'] = this.n;
+    json['alpha'] = this.alpha; // normalize by size
+    json['beta'] = this.beta;
     return json;
   };
 
@@ -118,9 +118,9 @@ goog.scope(function() {
   pro.fromJSON = function(json) {
     goog.base(this, 'fromJSON', json);
 
-    this.k = json.k;
-    this.n = json.n;
-    this.alpha = json.alpha; // normalize by size
-    this.beta = json.beta;
+    this.k = json['k'];
+    this.n = json['n'];
+    this.alpha = json['alpha']; // normalize by size
+    this.beta = json['beta'];
   };
 });

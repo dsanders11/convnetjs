@@ -72,7 +72,7 @@ goog.scope(function() {
       if(w[i] > maxv) { maxv = w[i]; maxi = i; }
       if(w[i] < minv) { minv = w[i]; mini = i; }
     }
-    return {maxi: maxi, maxv: maxv, mini: mini, minv: minv, dv:maxv-minv};
+    return {'maxi': maxi, 'maxv': maxv, 'mini': mini, 'minv': minv, 'dv': maxv-minv};
   };
 
   /**

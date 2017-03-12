@@ -14,15 +14,15 @@ goog.scope(function() {
     opt = opt || {};
 
     // required
-    this.sx = /** @type {number} */ (opt.sx); // filter size
-    this.in_depth = /** @type {number} */ (opt.in_depth);
-    this.in_sx = /** @type {number} */ (opt.in_sx);
-    this.in_sy = /** @type {number} */ (opt.in_sy);
+    this.sx = /** @type {number} */ (opt['sx']); // filter size
+    this.in_depth = /** @type {number} */ (opt['in_depth']);
+    this.in_sx = /** @type {number} */ (opt['in_sx']);
+    this.in_sy = /** @type {number} */ (opt['in_sy']);
 
     // optional
-    this.sy = typeof opt.sy !== 'undefined' ? opt.sy : this.sx;
-    this.stride = typeof opt.stride !== 'undefined' ? opt.stride : 2;
-    this.pad = typeof opt.pad !== 'undefined' ? opt.pad : 0; // amount of 0 padding to add around borders of input volume
+    this.sy = typeof opt['sy'] !== 'undefined' ? opt['sy'] : this.sx;
+    this.stride = typeof opt['stride'] !== 'undefined' ? opt['stride'] : 2;
+    this.pad = typeof opt['pad'] !== 'undefined' ? opt['pad'] : 0; // amount of 0 padding to add around borders of input volume
 
     // computed
     this.out_depth = this.in_depth;
@@ -93,7 +93,7 @@ goog.scope(function() {
     // pooling layers have no parameters, so simply compute
     // gradient wrt data here
     var V = this.in_act;
-    V.dw = new Float64Array(V.w.length); // zero out gradient wrt data
+    V['dw'] = new Float64Array(V['w'].length); // zero out gradient wrt data
 
     var n = 0;
     for(var d=0;d<this.out_depth;d++) {
@@ -118,11 +118,11 @@ goog.scope(function() {
   pro.toJSON = function() {
     var json = goog.base(this, 'toJSON');
 
-    json.sx = this.sx;
-    json.sy = this.sy;
-    json.stride = this.stride;
-    json.in_depth = this.in_depth;
-    json.pad = this.pad;
+    json['sx'] = this.sx;
+    json['sy'] = this.sy;
+    json['stride'] = this.stride;
+    json['in_depth'] = this.in_depth;
+    json['pad'] = this.pad;
     return json;
   };
 
@@ -132,11 +132,11 @@ goog.scope(function() {
   pro.fromJSON = function(json) {
     goog.base(this, 'fromJSON', json);
 
-    this.sx = json.sx;
-    this.sy = json.sy;
-    this.stride = json.stride;
-    this.in_depth = json.in_depth;
-    this.pad = typeof json.pad !== 'undefined' ? json.pad : 0; // backwards compatibility
+    this.sx = json['sx'];
+    this.sy = json['sy'];
+    this.stride = json['stride'];
+    this.in_depth = json['in_depth'];
+    this.pad = typeof json['pad'] !== 'undefined' ? json['pad'] : 0; // backwards compatibility
     this.switchx = new Float64Array(this.out_sx*this.out_sy*this.out_depth); // need to re-init these appropriately
     this.switchy = new Float64Array(this.out_sx*this.out_sy*this.out_depth);
   };

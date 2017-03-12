@@ -26,18 +26,17 @@ goog.scope(function() {
    * @export
    */
   convnetjs.Vol = function(sx, opt_sy, opt_depth, opt_c) {
-    // this is how you check if a variable is an array. Oh, Javascript :)
-    if(Object.prototype.toString.call(sx) === '[object Array]') {
+    if(Array.isArray(sx)) {
       // we were given a list in sx, assume 1D volume and fill it up
       this.sx = 1;
       this.sy = 1;
       this.depth = sx.length;
       // we have to do the following copy because we want to use
       // fast typed arrays, not an ordinary javascript array
-      this.w = new Float64Array(this.depth);
-      this.dw = new Float64Array(this.depth);
+      this['w'] = new Float64Array(this.depth);
+      this['dw'] = new Float64Array(this.depth);
       for(var i=0;i<this.depth;i++) {
-        this.w[i] = sx[i];
+        this['w'][i] = sx[i];
       }
     } else {
       // we were given dimensions of the vol
@@ -45,18 +44,18 @@ goog.scope(function() {
       this.sy = opt_sy;
       this.depth = opt_depth;
       var n = sx*opt_sy*opt_depth;
-      this.w = new Float64Array(n);
-      this.dw = new Float64Array(n);
+      this['w'] = new Float64Array(n);
+      this['dw'] = new Float64Array(n);
       if(typeof opt_c === 'undefined') {
         // weight normalization is done to equalize the output
         // variance of every neuron, otherwise neurons with a lot
         // of incoming connections have outputs of larger variance
         var scale = Math.sqrt(1.0/(sx*opt_sy*opt_depth));
         for(var i=0;i<n;i++) {
-          this.w[i] = convnetjs.randn(0.0, scale);
+          this['w'][i] = convnetjs.randn(0.0, scale);
         }
       } else {
-        this.w.fill(opt_c);
+        this['w'].fill(opt_c);
       }
     }
   };
@@ -72,7 +71,7 @@ goog.scope(function() {
    */
   pro.get = function(x, y, d) {
     var ix=((this.sx * y)+x)*this.depth+d;
-    return this.w[ix];
+    return this['w'][ix];
   };
 
   /**
@@ -84,7 +83,7 @@ goog.scope(function() {
    */
   pro.set = function(x, y, d, v) {
     var ix=((this.sx * y)+x)*this.depth+d;
-    this.w[ix] = v;
+    this['w'][ix] = v;
   };
 
   /**
@@ -96,7 +95,7 @@ goog.scope(function() {
    */
   pro.add = function(x, y, d, v) {
     var ix=((this.sx * y)+x)*this.depth+d;
-    this.w[ix] += v;
+    this['w'][ix] += v;
   };
 
   /**
@@ -108,7 +107,7 @@ goog.scope(function() {
    */
   pro.get_grad = function(x, y, d) {
     var ix = ((this.sx * y)+x)*this.depth+d;
-    return this.dw[ix];
+    return this['dw'][ix];
   };
 
   /**
@@ -120,7 +119,7 @@ goog.scope(function() {
    */
   pro.set_grad = function(x, y, d, v) {
     var ix = ((this.sx * y)+x)*this.depth+d;
-    this.dw[ix] = v;
+    this['dw'][ix] = v;
   };
 
   /**
@@ -132,7 +131,7 @@ goog.scope(function() {
    */
   pro.add_grad = function(x, y, d, v) {
     var ix = ((this.sx * y)+x)*this.depth+d;
-    this.dw[ix] += v;
+    this['dw'][ix] += v;
   };
 
   /**
@@ -149,9 +148,9 @@ goog.scope(function() {
    */
   pro.clone = function() {
     var V = new Vol(this.sx, this.sy, this.depth, 0.0);
-    var n = this.w.length;
+    var n = this['w'].length;
     for(var i=0;i<n;i++) {
-      V.w[i] = this.w[i];
+      V['w'][i] = this['w'][i];
     }
     return V;
   };
@@ -161,8 +160,8 @@ goog.scope(function() {
    * @export
    */
   pro.addFrom = function(V) {
-    for(var k=0;k<this.w.length;k++) {
-      this.w[k] += V.w[k];
+    for(var k=0;k<this['w'].length;k++) {
+      this['w'][k] += V['w'][k];
     }
   };
 
@@ -172,8 +171,8 @@ goog.scope(function() {
    * @export
    */
   pro.addFromScaled = function(V, a) {
-    for(var k=0;k<this.w.length;k++) {
-      this.w[k] += a*V.w[k];
+    for(var k=0;k<this['w'].length;k++) {
+      this['w'][k] += a*V['w'][k];
     }
   };
 
@@ -182,8 +181,8 @@ goog.scope(function() {
    * @export
    */
   pro.setConst = function(a) {
-    for(var k=0;k<this.w.length;k++) {
-      this.w[k] = a;
+    for(var k=0;k<this['w'].length;k++) {
+      this['w'][k] = a;
     }
   };
 
@@ -194,10 +193,10 @@ goog.scope(function() {
   pro.toJSON = function() {
     // todo: we may want to only save d most significant digits to save space
     var json = {};
-    json.sx = this.sx;
-    json.sy = this.sy;
-    json.depth = this.depth;
-    json.w = this.w;
+    json['sx'] = this.sx;
+    json['sy'] = this.sy;
+    json['depth'] = this.depth;
+    json['w'] = this['w'];
     return json;
     // we wont back up gradients to save space
   };
@@ -207,16 +206,16 @@ goog.scope(function() {
    * @export
    */
   pro.fromJSON = function(json) {
-    this.sx = json.sx;
-    this.sy = json.sy;
-    this.depth = json.depth;
+    this.sx = json['sx'];
+    this.sy = json['sy'];
+    this.depth = json['depth'];
 
     var n = this.sx*this.sy*this.depth;
-    this.w = new Float64Array(n);
-    this.dw = new Float64Array(n);
+    this['w'] = new Float64Array(n);
+    this['dw'] = new Float64Array(n);
     // copy over the elements.
     for(var i=0;i<n;i++) {
-      this.w[i] = json.w[i];
+      this['w'][i] = json['w'][i];
     }
   };
 });

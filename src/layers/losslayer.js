@@ -15,7 +15,7 @@ goog.scope(function() {
     opt = opt || {};
 
     // computed
-    this.num_inputs = opt.in_sx * opt.in_sy * opt.in_depth;
+    this.num_inputs = opt['in_sx'] * opt['in_sy'] * opt['in_depth'];
     this.out_depth = this.num_inputs;
     this.out_sx = 1;
     this.out_sy = 1;
@@ -55,11 +55,11 @@ goog.scope(function() {
    * @export
    */
   convnetjs.LossLayer.prototype.fromJSON = function(json) {
-    this.out_depth = /** @type {number} */ (json.out_depth);
-    this.out_sx = /** @type {number} */ (json.out_sx);
-    this.out_sy = /** @type {number} */ (json.out_sy);
-    this.layer_type = /** @type {string} */ (json.layer_type);
-    this.num_inputs = /** @type {number} */ (json.num_inputs);
+    this.out_depth = /** @type {number} */ (json['out_depth']);
+    this.out_sx = /** @type {number} */ (json['out_sx']);
+    this.out_sy = /** @type {number} */ (json['out_sy']);
+    this.layer_type = /** @type {string} */ (json['layer_type']);
+    this.num_inputs = /** @type {number} */ (json['num_inputs']);
   };
 
   /**
@@ -68,11 +68,11 @@ goog.scope(function() {
    */
   convnetjs.LossLayer.prototype.toJSON = function() {
     var json = {};
-    json.out_depth = this.out_depth;
-    json.out_sx = this.out_sx;
-    json.out_sy = this.out_sy;
-    json.layer_type = this.layer_type;
-    json.num_inputs = this.num_inputs;
+    json['out_depth'] = this.out_depth;
+    json['out_sx'] = this.out_sx;
+    json['out_sy'] = this.out_sy;
+    json['layer_type'] = this.layer_type;
+    json['num_inputs'] = this.num_inputs;
     return json;
   };
 });
