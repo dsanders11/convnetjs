@@ -9,10 +9,15 @@ goog.require('convnetjs.FullyConnLayer');
 goog.require('convnetjs.InputLayer');
 goog.require('convnetjs.JSONSerializable');
 goog.require('convnetjs.LocalResponseNormalizationLayer');
+goog.require('convnetjs.MaxoutLayer');
 goog.require('convnetjs.PoolLayer');
 goog.require('convnetjs.RegressionLayer');
+goog.require('convnetjs.ReluLayer');
 goog.require('convnetjs.SVMLayer');
+goog.require('convnetjs.SigmoidLayer');
 goog.require('convnetjs.SoftmaxLayer');
+goog.require('convnetjs.TanhLayer');
+goog.require('convnetjs.Vol');
 goog.require('convnetjs.util');
 
 
@@ -111,10 +116,10 @@ goog.scope(function() {
         case 'regression': this.layers.push(new convnetjs.RegressionLayer(def)); break;
         case 'conv': this.layers.push(new convnetjs.ConvLayer(def)); break;
         case 'pool': this.layers.push(new convnetjs.PoolLayer(def)); break;
-        //case 'relu': this.layers.push(new convnetjs.ReluLayer(def)); break;
-        //case 'sigmoid': this.layers.push(new convnetjs.SigmoidLayer(def)); break;
-        //case 'tanh': this.layers.push(new convnetjs.TanhLayer(def)); break;
-        //case 'maxout': this.layers.push(new convnetjs.MaxoutLayer(def)); break;
+        case 'relu': this.layers.push(new convnetjs.ReluLayer(def)); break;
+        case 'sigmoid': this.layers.push(new convnetjs.SigmoidLayer(def)); break;
+        case 'tanh': this.layers.push(new convnetjs.TanhLayer(def)); break;
+        case 'maxout': this.layers.push(new convnetjs.MaxoutLayer(def)); break;
         case 'svm': this.layers.push(new convnetjs.SVMLayer(def)); break;
         default: console.log('ERROR: UNRECOGNIZED LAYER TYPE: ' + def.type);
       }
@@ -219,9 +224,9 @@ goog.scope(function() {
       var t = Lj.layer_type;
       var L;
       if(t==='input') { L = new convnetjs.InputLayer(); }
-      //if(t==='relu') { L = new convnetjs.ReluLayer(); }
-      //if(t==='sigmoid') { L = new convnetjs.SigmoidLayer(); }
-      //if(t==='tanh') { L = new convnetjs.TanhLayer(); }
+      if(t==='relu') { L = new convnetjs.ReluLayer(); }
+      if(t==='sigmoid') { L = new convnetjs.SigmoidLayer(); }
+      if(t==='tanh') { L = new convnetjs.TanhLayer(); }
       if(t==='dropout') { L = new convnetjs.DropoutLayer(); }
       if(t==='conv') { L = new convnetjs.ConvLayer(); }
       if(t==='pool') { L = new convnetjs.PoolLayer(); }
@@ -229,7 +234,7 @@ goog.scope(function() {
       if(t==='softmax') { L = new convnetjs.SoftmaxLayer(); }
       if(t==='regression') { L = new convnetjs.RegressionLayer(); }
       if(t==='fc') { L = new convnetjs.FullyConnLayer(); }
-      //if(t==='maxout') { L = new convnetjs.MaxoutLayer(); }
+      if(t==='maxout') { L = new convnetjs.MaxoutLayer(); }
       if(t==='svm') { L = new convnetjs.SVMLayer(); }
       L.fromJSON(Lj);
       this.layers.push(L);
