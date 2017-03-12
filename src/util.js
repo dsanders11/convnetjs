@@ -1,10 +1,23 @@
-(function(global) {
-  "use strict";
+goog.provide('convnet.assert');
+goog.provide('convnet.getopt');
+goog.provide('convnet.maxmin');
+goog.provide('convnet.randf');
+goog.provide('convnet.randi');
+goog.provide('convnet.randn');
+goog.provide('convnet.randperm');
+goog.provide('convnet.weightedSample');
 
+
+goog.scope(function() {
   // Random number utilities
   var return_v = false;
   var v_val = 0.0;
-  var gaussRandom = function() {
+
+  /**
+   * @return {number}
+   * @export
+   */
+  function gaussRandom() {
     if(return_v) {
       return_v = false;
       return v_val;
@@ -18,42 +31,44 @@
     return_v = true;
     return u*c;
   }
-  var randf = function(a, b) { return Math.random()*(b-a)+a; }
-  var randi = function(a, b) { return Math.floor(Math.random()*(b-a)+a); }
-  var randn = function(mu, std){ return mu+gaussRandom()*std; }
 
-  // Array utilities
-  var zeros = function(n) {
-    if(typeof(n)==='undefined' || isNaN(n)) { return []; }
-    if(typeof ArrayBuffer === 'undefined') {
-      // lacking browser support
-      var arr = new Array(n);
-      for(var i=0;i<n;i++) { arr[i]= 0; }
-      return arr;
-    } else {
-      return new Float64Array(n);
-    }
+  /**
+   * @param {number} a
+   * @param {number} b
+   * @return {number}
+   * @export
+   */
+  function randf(a, b) {
+    return Math.random()*(b-a)+a;
   }
 
-  var arrContains = function(arr, elt) {
-    for(var i=0,n=arr.length;i<n;i++) {
-      if(arr[i]===elt) return true;
-    }
-    return false;
+  /**
+   * @param {number} a
+   * @param {number} b
+   * @return {number}
+   * @export
+   */
+  function randi(a, b) {
+    return Math.floor(Math.random()*(b-a)+a);
   }
 
-  var arrUnique = function(arr) {
-    var b = [];
-    for(var i=0,n=arr.length;i<n;i++) {
-      if(!arrContains(b, arr[i])) {
-        b.push(arr[i]);
-      }
-    }
-    return b;
+  /**
+   * @param {number} mu
+   * @param {number} std
+   * @return {number}
+   * @export
+   */
+  function randn(mu, std) {
+    return mu+gaussRandom()*std;
   }
 
-  // return max and min of a given non-empty array.
-  var maxmin = function(w) {
+  /**
+   * return max and min of a given non-empty array.
+   * @param {!Array.<number>} w
+   * @return {Object}
+   * @export
+   */
+  function maxmin(w) {
     if(w.length === 0) { return {}; } // ... ;s
     var maxv = w[0];
     var minv = w[0];
@@ -67,8 +82,12 @@
     return {maxi: maxi, maxv: maxv, mini: mini, minv: minv, dv:maxv-minv};
   }
 
-  // create random permutation of numbers, in range [0...n-1]
-  var randperm = function(n) {
+  /**
+   * create random permutation of numbers, in range [0...n-1]
+   * @param {number} n
+   * @return {Array.<number>}
+   */
+  function randperm(n) {
     var i = n,
         j = 0,
         temp;
@@ -83,9 +102,15 @@
     return array;
   }
 
-  // sample from list lst according to probabilities in list probs
-  // the two lists are of same size, and probs adds up to 1
-  var weightedSample = function(lst, probs) {
+  /**
+   * sample from list lst according to probabilities in list probs
+   * the two lists are of same size, and probs adds up to 1
+   * @param {!Array} lst
+   * @param {Array} probs
+   * @return {number}
+   * @export
+   */
+  function weightedSample(lst, probs) {
     var p = randf(0, 1.0);
     var cumprob = 0.0;
     for(var k=0,n=lst.length;k<n;k++) {
@@ -94,8 +119,15 @@
     }
   }
 
-  // syntactic sugar function for getting default parameter values
-  var getopt = function(opt, field_name, default_value) {
+  /**
+   * syntactic sugar function for getting default parameter values
+   * @param {Object<string, *>} opt
+   * @param {string} field_name
+   * @param {*} default_value
+   * @return {*}
+   * @export
+   */
+  function getopt(opt, field_name, default_value) {
     if(typeof field_name === 'string') {
       // case of single string
       return (typeof opt[field_name] !== 'undefined') ? opt[field_name] : default_value;
@@ -112,6 +144,11 @@
     }
   }
 
+  /**
+   * @param {boolean} condition
+   * @param {string} message
+   * @export
+   */
   function assert(condition, message) {
     if (!condition) {
       message = message || "Assertion failed";
@@ -121,17 +158,4 @@
       throw message; // Fallback
     }
   }
-
-  global.randf = randf;
-  global.randi = randi;
-  global.randn = randn;
-  global.zeros = zeros;
-  global.maxmin = maxmin;
-  global.randperm = randperm;
-  global.weightedSample = weightedSample;
-  global.arrUnique = arrUnique;
-  global.arrContains = arrContains;
-  global.getopt = getopt;
-  global.assert = assert;
-
-})(convnetjs);
+});
