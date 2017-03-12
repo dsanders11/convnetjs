@@ -118,11 +118,8 @@ goog.scope(function() {
    * @override
    */
   pro.toJSON = function() {
-    var json = {};
-    json.out_depth = this.out_depth;
-    json.out_sx = this.out_sx;
-    json.out_sy = this.out_sy;
-    json.layer_type = this.layer_type;
+    var json = goog.base(this, 'toJSON');
+
     json.group_size = this.group_size;
     return json;
   };

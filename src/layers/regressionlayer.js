@@ -13,26 +13,11 @@ goog.scope(function() {
    * @export
    */
   convnetjs.RegressionLayer = function(opt) {
-    opt = opt || {};
-
-    // computed
-    this.num_inputs = opt.in_sx * opt.in_sy * opt.in_depth;
-    this.out_depth = this.num_inputs;
-    this.out_sx = 1;
-    this.out_sy = 1;
+    goog.base(this, opt);
     this.layer_type = 'regression';
   };
   goog.inherits(convnetjs.RegressionLayer, convnetjs.LossLayer);
   var pro = convnetjs.RegressionLayer.prototype;
-
-  /**
-   * @override
-   */
-  pro.forward = function(V, is_training) {
-    this.in_act = V;
-    this.out_act = V;
-    return V; // identity function
-  };
 
   /**
    * @override
@@ -63,18 +48,5 @@ goog.scope(function() {
       loss += 0.5*dy*dy;
     }
     return loss;
-  };
-
-  /**
-   * @override
-   */
-  pro.toJSON = function() {
-    var json = {};
-    json.out_depth = this.out_depth;
-    json.out_sx = this.out_sx;
-    json.out_sy = this.out_sy;
-    json.layer_type = this.layer_type;
-    json.num_inputs = this.num_inputs;
-    return json;
   };
 });

@@ -51,16 +51,4 @@ goog.scope(function() {
       V.dw[i] = (1.0 - v2wi * v2wi) * V2.dw[i];
     }
   };
-
-  /**
-   * @override
-   */
-  pro.toJSON = function() {
-    var json = {};
-    json.out_depth = this.out_depth;
-    json.out_sx = this.out_sx;
-    json.out_sy = this.out_sy;
-    json.layer_type = this.layer_type;
-    return json;
-  };
 });

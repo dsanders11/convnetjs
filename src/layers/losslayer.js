@@ -11,16 +11,27 @@ goog.scope(function() {
    * @abstract
    * @export
    */
-  convnetjs.LossLayer = function(opt) { };
+  convnetjs.LossLayer = function(opt) {
+    opt = opt || {};
+
+    // computed
+    this.num_inputs = opt.in_sx * opt.in_sy * opt.in_depth;
+    this.out_depth = this.num_inputs;
+    this.out_sx = 1;
+    this.out_sy = 1;
+  };
 
   /**
    * @param {!convnetjs.Vol} V
    * @param {boolean} is_training
    * @return {!convnetjs.Vol}
-   * @abstract
    * @export
    */
-  convnetjs.LossLayer.prototype.forward = function(V, is_training) { };
+  convnetjs.LossLayer.prototype.forward = function(V, is_training) {
+    this.in_act = V;
+    this.out_act = V; // nothing to do, output raw scores
+    return V;
+  };
 
   /**
    * backprop: compute gradients wrt all parameters
@@ -53,8 +64,15 @@ goog.scope(function() {
 
   /**
    * @override
-   * @abstract
    * @export
    */
-  convnetjs.LossLayer.prototype.toJSON = function() { };
+  convnetjs.LossLayer.prototype.toJSON = function() {
+    var json = {};
+    json.out_depth = this.out_depth;
+    json.out_sx = this.out_sx;
+    json.out_sy = this.out_sy;
+    json.layer_type = this.layer_type;
+    json.num_inputs = this.num_inputs;
+    return json;
+  };
 });

@@ -116,15 +116,12 @@ goog.scope(function() {
    * @override
    */
   pro.toJSON = function() {
-    var json = {};
+    var json = goog.base(this, 'toJSON');
+
     json.sx = this.sx;
     json.sy = this.sy;
     json.stride = this.stride;
     json.in_depth = this.in_depth;
-    json.out_depth = this.out_depth;
-    json.out_sx = this.out_sx;
-    json.out_sy = this.out_sy;
-    json.layer_type = this.layer_type;
     json.pad = this.pad;
     return json;
   };

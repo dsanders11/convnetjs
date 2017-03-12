@@ -10,26 +10,11 @@ goog.scope(function() {
    * @export
    */
   convnetjs.SVMLayer = function(opt) {
-    opt = opt || {};
-
-    // computed
-    this.num_inputs = opt.in_sx * opt.in_sy * opt.in_depth;
-    this.out_depth = this.num_inputs;
-    this.out_sx = 1;
-    this.out_sy = 1;
+    goog.base(this, opt);
     this.layer_type = 'svm';
   };
   goog.inherits(convnetjs.SVMLayer, convnetjs.LossLayer);
   var pro = convnetjs.SVMLayer.prototype;
-
-  /**
-   * @override
-   */
-  pro.forward = function(V, is_training) {
-    this.in_act = V;
-    this.out_act = V; // nothing to do, output raw scores
-    return V;
-  };
 
   /**
    * @override
@@ -57,18 +42,5 @@ goog.scope(function() {
     }
 
     return loss;
-  };
-
-  /**
-   * @override
-   */
-  pro.toJSON = function() {
-    var json = {};
-    json.out_depth = this.out_depth;
-    json.out_sx = this.out_sx;
-    json.out_sy = this.out_sy;
-    json.layer_type = this.layer_type;
-    json.num_inputs = this.num_inputs;
-    return json;
   };
 });
