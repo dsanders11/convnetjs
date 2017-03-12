@@ -16,29 +16,39 @@ goog.scope(function() {
     opt = opt || {};
 
     // required
-    this.out_depth = opt['filters'];
-    this.sx = opt['sx']; // filter size. Should be odd if possible, it's cleaner.
-    this.in_depth = /** @type {number} */ (opt['in_depth']);
-    this.in_sx = /** @type {number} */ (opt['in_sx']);
-    this.in_sy = /** @type {number} */ (opt['in_sy']);
+    this.out_depth = /** @const {number} */ (opt['filters']);
+    this.sx = /** @const {number} */ (opt['sx']); // filter size. Should be odd if possible, it's cleaner.
+    this.in_depth = /** @const {number} */ (opt['in_depth']);
+    this.in_sx = /** @const {number} */ (opt['in_sx']);
+    this.in_sy = /** @const {number} */ (opt['in_sy']);
+
+    /** @type {convnetjs.Vol} */
+    this.in_act = null;
+    /** @type {convnetjs.Vol} */
+    this.out_act = null;
 
     // optional
-    this.sy = typeof opt['sy'] !== 'undefined' ? opt['sy'] : this.sx;
-    this.stride = typeof opt['stride'] !== 'undefined' ? opt['stride'] : 1; // stride at which we apply filters to input volume
-    this.pad = typeof opt['pad'] !== 'undefined' ? opt['pad'] : 0; // amount of 0 padding to add around borders of input volume
-    this.l1_decay_mul = typeof opt['l1_decay_mul'] !== 'undefined' ? opt['l1_decay_mul'] : 0.0;
-    this.l2_decay_mul = typeof opt['l2_decay_mul'] !== 'undefined' ? opt['l2_decay_mul'] : 1.0;
+    this.sy = /** @const {number} */ (typeof opt['sy'] !== 'undefined' ? opt['sy'] : this.sx);
+    // stride at which we apply filters to input volume
+    this.stride = /** @const {number} */ (typeof opt['stride'] !== 'undefined' ? opt['stride'] : 1);
+    // amount of 0 padding to add around borders of input volume
+    this.pad = /** @const {number} */ (typeof opt['pad'] !== 'undefined' ? opt['pad'] : 0);
+    this.l1_decay_mul = /** @const {number} */ (typeof opt['l1_decay_mul'] !== 'undefined' ? opt['l1_decay_mul'] : 0.0);
+    this.l2_decay_mul = /** @const {number} */ (typeof opt['l2_decay_mul'] !== 'undefined' ? opt['l2_decay_mul'] : 1.0);
 
     // computed
     // note we are doing floor, so if the strided convolution of the filter doesnt fit into the input
     // volume exactly, the output volume will be trimmed and not contain the (incomplete) computed
     // final application.
+    /** @const {number} */
     this.out_sx = Math.floor((this.in_sx + this.pad * 2 - this.sx) / this.stride + 1);
+    /** @const {number} */
     this.out_sy = Math.floor((this.in_sy + this.pad * 2 - this.sy) / this.stride + 1);
     this.layer_type = 'conv';
 
     // initializations
     var bias = typeof opt['bias_pref'] !== 'undefined' ? opt['bias_pref'] : 0.0;
+    /** @type {!Array.<!convnetjs.Vol>} */
     this.filters = [];
     for(var i=0;i<this.out_depth;i++) { this.filters.push(new Vol(this.sx, this.sy, this.in_depth)); }
     this.biases = new Vol(1, 1, this.out_depth, bias);

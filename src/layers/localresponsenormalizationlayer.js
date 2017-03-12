@@ -16,16 +16,21 @@ goog.scope(function() {
     opt = opt || {};
 
     // required
-    this.k = opt['k'];
-    this.n = opt['n'];
-    this.alpha = opt['alpha'];
-    this.beta = opt['beta'];
+    this.k = /** @const {number} */ (opt['k']);
+    this.n = /** @const {number} */ (opt['n']);
+    this.alpha = /** @const {number} */ (opt['alpha']);
+    this.beta = /** @const {number} */ (opt['beta']);
 
     // computed
-    this.out_sx = opt['in_sx'];
-    this.out_sy = opt['in_sy'];
-    this.out_depth = opt['in_depth'];
+    this.out_sx = /** @const {number} */ (opt['in_sx']);
+    this.out_sy = /** @const {number} */ (opt['in_sy']);
+    this.out_depth = /** @const {number} */ (opt['in_depth']);
     this.layer_type = 'lrn';
+
+    /** @type {convnetjs.Vol} */
+    this.in_act = null;
+    /** @type {convnetjs.Vol} */
+    this.out_act = null;
 
     // checks
     if(this.n%2 === 0) { console.log('WARNING n should be odd for LRN layer'); }

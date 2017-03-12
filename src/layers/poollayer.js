@@ -14,15 +14,21 @@ goog.scope(function() {
     opt = opt || {};
 
     // required
-    this.sx = /** @type {number} */ (opt['sx']); // filter size
-    this.in_depth = /** @type {number} */ (opt['in_depth']);
-    this.in_sx = /** @type {number} */ (opt['in_sx']);
-    this.in_sy = /** @type {number} */ (opt['in_sy']);
+    this.sx = /** @const {number} */ (opt['sx']); // filter size
+    this.in_depth = /** @const {number} */ (opt['in_depth']);
+    this.in_sx = /** @const {number} */ (opt['in_sx']);
+    this.in_sy = /** @const {number} */ (opt['in_sy']);
 
     // optional
-    this.sy = typeof opt['sy'] !== 'undefined' ? opt['sy'] : this.sx;
-    this.stride = typeof opt['stride'] !== 'undefined' ? opt['stride'] : 2;
-    this.pad = typeof opt['pad'] !== 'undefined' ? opt['pad'] : 0; // amount of 0 padding to add around borders of input volume
+    this.sy = /** @const {number} */ (typeof opt['sy'] !== 'undefined' ? opt['sy'] : this.sx);
+    this.stride = /** @const {number} */ (typeof opt['stride'] !== 'undefined' ? opt['stride'] : 2);
+    // amount of 0 padding to add around borders of input volume
+    this.pad = /** @const {number} */ (typeof opt['pad'] !== 'undefined' ? opt['pad'] : 0);
+
+    /** @type {convnetjs.Vol} */
+    this.in_act = null;
+    /** @type {convnetjs.Vol} */
+    this.out_act = null;
 
     // computed
     this.out_depth = this.in_depth;

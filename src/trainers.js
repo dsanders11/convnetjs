@@ -20,20 +20,32 @@ goog.scope(function() {
     this.net = net;
 
     opt = opt || {};
+    /** @type {number} */
     this.learning_rate = typeof opt['learning_rate'] !== 'undefined' ? opt['learning_rate'] : 0.01;
+    /** @type {number} */
     this.l1_decay = typeof opt['l1_decay'] !== 'undefined' ? opt['l1_decay'] : 0.0;
+    /** @type {number} */
     this.l2_decay = typeof opt['l2_decay'] !== 'undefined' ? opt['l2_decay'] : 0.0;
+    /** @type {number} */
     this.batch_size = typeof opt['batch_size'] !== 'undefined' ? opt['batch_size'] : 1;
+    /** @type {string} */
     this.method = typeof opt['method'] !== 'undefined' ? opt['method'] : 'sgd'; // sgd/adam/adagrad/adadelta/windowgrad/netsterov
 
+    /** @type {number} */
     this.momentum = typeof opt['momentum'] !== 'undefined' ? opt['momentum'] : 0.9;
+    /** @type {number} */
     this.ro = typeof opt['ro'] !== 'undefined' ? opt['ro'] : 0.95; // used in adadelta
+    /** @type {number} */
     this.eps = typeof opt['eps'] !== 'undefined' ? opt['eps'] : 1e-8; // used in adam or adadelta
+    /** @type {number} */
     this.beta1 = typeof opt['beta1'] !== 'undefined' ? opt['beta1'] : 0.9; // used in adam
+    /** @type {number} */
     this.beta2 = typeof opt['beta2'] !== 'undefined' ? opt['beta2'] : 0.999; // used in adam
 
     this.k = 0; // iteration counter
+    /** @type {!Array<!Float64Array>} */
     this.gsum = []; // last iteration gradients (used for momentum calculations)
+    /** @type {!Array<!Float64Array>} */
     this.xsum = []; // used in adam or adadelta
 
     // check if regression is expected
@@ -77,11 +89,11 @@ goog.scope(function() {
         // adagrad needs gsum
         // adam and adadelta needs gsum and xsum
         for(var i=0;i<pglist.length;i++) {
-          this.gsum.push(new Float32Array(pglist[i]['params'].length));
+          this.gsum.push(new Float64Array(pglist[i]['params'].length));
           if(this.method === 'adam' || this.method === 'adadelta') {
-            this.xsum.push(new Float32Array(pglist[i]['params'].length));
+            this.xsum.push(new Float64Array(pglist[i]['params'].length));
           } else {
-            this.xsum.push([]); // conserve memory
+            this.xsum.push(new Float64Array(0)); // conserve memory
           }
         }
       }
@@ -89,8 +101,8 @@ goog.scope(function() {
       // perform an update for all sets of weights
       for(var i=0;i<pglist.length;i++) {
         var pg = pglist[i]; // param, gradient, other options in future (custom learning rate etc)
-        var p = pg['params'];
-        var g = pg['grads'];
+        var p = /** @type {Float64Array} */ (pg['params']);
+        var g = /** @type {Float64Array} */ (pg['grads']);
 
         // learning rate for some parameters.
         var l2_decay_mul = typeof pg['l2_decay_mul'] !== 'undefined' ? pg['l2_decay_mul'] : 1.0;

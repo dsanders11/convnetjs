@@ -16,6 +16,9 @@ goog.scope(function() {
   convnetjs.SoftmaxLayer = function(opt) {
     goog.base(this, opt);
     this.layer_type = 'softmax';
+
+    /** @type {Float64Array} */
+    this.es = null;
   };
   goog.inherits(convnetjs.SoftmaxLayer, convnetjs.LossLayer);
   var pro = convnetjs.SoftmaxLayer.prototype;
@@ -30,7 +33,7 @@ goog.scope(function() {
 
     // compute max activation
     var as = V['w'];
-    var amax = V['w'][0];
+    var amax = /** @type {number} */ (V['w'][0]);
     for(var i=1;i<this.out_depth;i++) {
       if(as[i] > amax) amax = as[i];
     }

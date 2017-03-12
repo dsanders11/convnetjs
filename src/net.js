@@ -33,13 +33,14 @@ goog.scope(function() {
    * @export
    */
   convnetjs.Net = function() {
+    /** @type {!Array.<(convnetjs.LossLayer|convnetjs.Layer)>} */
     this.layers = [];
   };
   var pro = convnetjs.Net.prototype;
 
   /**
    * takes a list of layer definitions and creates the network layer objects
-   * @param {!Object} defs
+   * @param {!Array.<!Object<string,*>>} defs
    * @export
    */
   pro.makeLayers = function(defs) {
@@ -47,7 +48,11 @@ goog.scope(function() {
     goog.asserts.assert(defs.length >= 2, 'Error! At least one input layer and one loss layer are required.');
     goog.asserts.assert(defs[0]['type'] === 'input', 'Error! First layer must be the input layer, to declare size of inputs');
 
-    // desugar layer_defs for adding activation, dropout layers etc
+    /**
+     * desugar layer_defs for adding activation, dropout layers etc
+     * @param {!Array.<!Object<string,*>>} defs
+     * @return {!Array.<!Object<string,*>>}
+     */
     var desugar = function(defs) {
       var new_defs = [];
       for(var i=0;i<defs.length;i++) {
@@ -108,7 +113,7 @@ goog.scope(function() {
         def['in_depth'] = prev.out_depth;
       }
 
-      switch(def.type) {
+      switch(def['type']) {
         case 'fc': this.layers.push(new convnetjs.FullyConnLayer(def)); break;
         case 'lrn': this.layers.push(new convnetjs.LocalResponseNormalizationLayer(def)); break;
         case 'dropout': this.layers.push(new convnetjs.DropoutLayer(def)); break;
@@ -229,7 +234,7 @@ goog.scope(function() {
     this.layers = [];
     for(var i=0;i<json['layers'].length;i++) {
       var Lj = json['layers'][i];
-      var t = Lj['layer_type'];
+      var t = /** @type {string} */ (Lj['layer_type']);
       var L;
       if(t==='input') { L = new convnetjs.InputLayer(); }
       if(t==='relu') { L = new convnetjs.ReluLayer(); }

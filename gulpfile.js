@@ -51,7 +51,7 @@ var CLOSURE_CONFIG = {
     'missingRequire',
     'missingReturn',
     'nonStandardJsDocs',
-    'reportUnknownTypes',
+    // 'reportUnknownTypes',
     'undefinedNames',
     'undefinedVars',
     'unknownDefines',

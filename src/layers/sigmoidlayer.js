@@ -16,10 +16,15 @@ goog.scope(function() {
     opt = opt || {};
 
     // computed
-    this.out_sx = opt['in_sx'];
-    this.out_sy = opt['in_sy'];
-    this.out_depth = opt['in_depth'];
+    this.out_sx = /** @const {number} */ (opt['in_sx']);
+    this.out_sy = /** @const {number} */ (opt['in_sy']);
+    this.out_depth = /** @const {number} */ (opt['in_depth']);
     this.layer_type = 'sigmoid';
+
+    /** @type {convnetjs.Vol} */
+    this.in_act = null;
+    /** @type {convnetjs.Vol} */
+    this.out_act = null;
   };
   goog.inherits(convnetjs.SigmoidLayer, convnetjs.Layer);
   var pro = convnetjs.SigmoidLayer.prototype;

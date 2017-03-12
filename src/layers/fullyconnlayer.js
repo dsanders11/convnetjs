@@ -17,20 +17,26 @@ goog.scope(function() {
 
     // required
     // ok fine we will allow 'filters' as the word as well
-    this.out_depth = typeof opt['num_neurons'] !== 'undefined' ? opt['num_neurons'] : opt['filters'];
+    this.out_depth = /** @const {number} */ (typeof opt['num_neurons'] !== 'undefined' ? opt['num_neurons'] : opt['filters']);
 
     // optional
-    this.l1_decay_mul = typeof opt['l1_decay_mul'] !== 'undefined' ? opt['l1_decay_mul'] : 0.0;
-    this.l2_decay_mul = typeof opt['l2_decay_mul'] !== 'undefined' ? opt['l2_decay_mul'] : 1.0;
+    this.l1_decay_mul = /** @const {number} */ (typeof opt['l1_decay_mul'] !== 'undefined' ? opt['l1_decay_mul'] : 0.0);
+    this.l2_decay_mul = /** @const {number} */ (typeof opt['l2_decay_mul'] !== 'undefined' ? opt['l2_decay_mul'] : 1.0);
 
     // computed
-    this.num_inputs = /** @type {number} */ (opt['in_sx'] * opt['in_sy'] * opt['in_depth']);
+    this.num_inputs = /** @const {number} */ (opt['in_sx'] * opt['in_sy'] * opt['in_depth']);
     this.out_sx = 1;
     this.out_sy = 1;
     this.layer_type = 'fc';
 
+    /** @type {convnetjs.Vol} */
+    this.in_act = null;
+    /** @type {convnetjs.Vol} */
+    this.out_act = null;
+
     // initializations
-    var bias = typeof opt['bias_pref'] !== 'undefined' ? opt['bias_pref'] : 0.0;
+    var bias = /** @const {number} */ (typeof opt['bias_pref'] !== 'undefined' ? opt['bias_pref'] : 0.0);
+    /** @type {!Array.<!convnetjs.Vol>} */
     this.filters = [];
     for(var i=0;i<this.out_depth ;i++) { this.filters.push(new Vol(1, 1, this.num_inputs)); }
     this.biases = new Vol(1, 1, this.out_depth, bias);

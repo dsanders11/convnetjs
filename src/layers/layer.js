@@ -41,10 +41,10 @@ goog.scope(function() {
    * @export
    */
   convnetjs.Layer.prototype.fromJSON = function(json) {
-    this.out_depth = /** @type {number} */ (json['out_depth']);
-    this.out_sx = /** @type {number} */ (json['out_sx']);
-    this.out_sy = /** @type {number} */ (json['out_sy']);
-    this.layer_type = /** @type {number} */ (json['layer_type']);
+    this.out_depth = /** @const {number} */ (json['out_depth']);
+    this.out_sx = /** @const {number} */ (json['out_sx']);
+    this.out_sy = /** @const {number} */ (json['out_sy']);
+    this.layer_type = /** @const {number} */ (json['layer_type']);
   };
 
   /**

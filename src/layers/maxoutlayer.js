@@ -18,13 +18,18 @@ goog.scope(function() {
     opt = opt || {};
 
     // required
-    this.group_size = typeof opt['group_size'] !== 'undefined' ? opt['group_size'] : 2;
+    this.group_size = /** @const {number} */ (typeof opt['group_size'] !== 'undefined' ? opt['group_size'] : 2);
 
     // computed
-    this.out_sx = opt['in_sx'];
-    this.out_sy = opt['in_sy'];
+    this.out_sx = /** @const {number} */ (opt['in_sx']);
+    this.out_sy = /** @const {number} */ (opt['in_sy']);
     this.out_depth = Math.floor(opt['in_depth'] / this.group_size);
     this.layer_type = 'maxout';
+
+    /** @type {convnetjs.Vol} */
+    this.in_act = null;
+    /** @type {convnetjs.Vol} */
+    this.out_act = null;
 
     this.switches = new Float64Array(this.out_sx*this.out_sy*this.out_depth); // useful for backprop
   };
@@ -45,7 +50,7 @@ goog.scope(function() {
     if(this.out_sx === 1 && this.out_sy === 1) {
       for(var i=0;i<N;i++) {
         var ix = i * this.group_size; // base index offset
-        var a = V['w'][ix];
+        var a = /** @type {number} */ (V['w'][ix]);
         var ai = 0;
         for(var j=1;j<this.group_size;j++) {
           var a2 = V['w'][ix+j];

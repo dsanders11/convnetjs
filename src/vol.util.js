@@ -63,10 +63,10 @@ goog.scope(function() {
   convnetjs.img_to_vol = function(img, convert_grayscale) {
     if(typeof(convert_grayscale)==='undefined') convert_grayscale = false;
 
-    var canvas = document.createElement('canvas');
+    var canvas = /** @type {HTMLCanvasElement} */ (document.createElement('canvas'));
     canvas.width = img.width;
     canvas.height = img.height;
-    var ctx = canvas.getContext("2d");
+    var ctx = /** @type {CanvasRenderingContext2D} */ (canvas.getContext("2d"));
 
     // due to a Firefox bug
     try {

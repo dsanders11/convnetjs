@@ -26,6 +26,12 @@ goog.scope(function() {
    * @export
    */
   convnetjs.Vol = function(sx, opt_sy, opt_depth, opt_c) {
+    /** @type {number} */
+    this.sx = -1;
+
+    /** @type {number} */
+    this.sy = -1;
+
     if(Array.isArray(sx)) {
       // we were given a list in sx, assume 1D volume and fill it up
       this.sx = 1;
@@ -41,7 +47,7 @@ goog.scope(function() {
     } else {
       // we were given dimensions of the vol
       this.sx = sx;
-      this.sy = opt_sy;
+      this.sy = /** @type {number} */ (opt_sy);
       this.depth = opt_depth;
       var n = sx*opt_sy*opt_depth;
       this['w'] = new Float64Array(n);
