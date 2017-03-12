@@ -22,7 +22,7 @@ module.exports = function(karma) {
       remapOptions: {
         exclude: [
           'node_modules',
-          '\[synthetic'
+          '\\[synthetic*'
         ]
       }
     },
