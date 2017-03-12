@@ -3,7 +3,9 @@
  * @suppress {extraRequire}
  */
 goog.provide('convnetjs.Net');
+goog.require('convnetjs.ConvLayer');
 goog.require('convnetjs.DropoutLayer');
+goog.require('convnetjs.FullyConnLayer');
 goog.require('convnetjs.InputLayer');
 goog.require('convnetjs.JSONSerializable');
 goog.require('convnetjs.LocalResponseNormalizationLayer');
@@ -101,13 +103,13 @@ goog.scope(function() {
       }
 
       switch(def.type) {
-        //case 'fc': this.layers.push(new convnetjs.FullyConnLayer(def)); break;
+        case 'fc': this.layers.push(new convnetjs.FullyConnLayer(def)); break;
         case 'lrn': this.layers.push(new convnetjs.LocalResponseNormalizationLayer(def)); break;
         case 'dropout': this.layers.push(new convnetjs.DropoutLayer(def)); break;
         case 'input': this.layers.push(new convnetjs.InputLayer(def)); break;
         case 'softmax': this.layers.push(new convnetjs.SoftmaxLayer(def)); break;
         case 'regression': this.layers.push(new convnetjs.RegressionLayer(def)); break;
-        //case 'conv': this.layers.push(new convnetjs.ConvLayer(def)); break;
+        case 'conv': this.layers.push(new convnetjs.ConvLayer(def)); break;
         case 'pool': this.layers.push(new convnetjs.PoolLayer(def)); break;
         //case 'relu': this.layers.push(new convnetjs.ReluLayer(def)); break;
         //case 'sigmoid': this.layers.push(new convnetjs.SigmoidLayer(def)); break;
@@ -221,12 +223,12 @@ goog.scope(function() {
       //if(t==='sigmoid') { L = new convnetjs.SigmoidLayer(); }
       //if(t==='tanh') { L = new convnetjs.TanhLayer(); }
       if(t==='dropout') { L = new convnetjs.DropoutLayer(); }
-      //if(t==='conv') { L = new convnetjs.ConvLayer(); }
+      if(t==='conv') { L = new convnetjs.ConvLayer(); }
       if(t==='pool') { L = new convnetjs.PoolLayer(); }
       if(t==='lrn') { L = new convnetjs.LocalResponseNormalizationLayer(); }
       if(t==='softmax') { L = new convnetjs.SoftmaxLayer(); }
       if(t==='regression') { L = new convnetjs.RegressionLayer(); }
-      //if(t==='fc') { L = new convnetjs.FullyConnLayer(); }
+      if(t==='fc') { L = new convnetjs.FullyConnLayer(); }
       //if(t==='maxout') { L = new convnetjs.MaxoutLayer(); }
       if(t==='svm') { L = new convnetjs.SVMLayer(); }
       L.fromJSON(Lj);

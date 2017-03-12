@@ -1,5 +1,5 @@
 goog.provide('convnetjs.SoftmaxLayer');
-goog.require('convnetjs.Layer');
+goog.require('convnetjs.LossLayer');
 goog.require('convnetjs.Vol');
 
 
@@ -10,7 +10,7 @@ goog.scope(function() {
    * function (exponentiate and normalize to sum to 1 as probabilities should)
    * @constructor
    * @param {Object<string,*>=} opt Configuration options for layer
-   * @extends {convnetjs.Layer}
+   * @extends {convnetjs.LossLayer}
    * @export
    */
   convnetjs.SoftmaxLayer = function(opt) {
@@ -23,7 +23,7 @@ goog.scope(function() {
     this.out_sy = 1;
     this.layer_type = 'softmax';
   };
-  goog.inherits(convnetjs.SoftmaxLayer, convnetjs.Layer);
+  goog.inherits(convnetjs.SoftmaxLayer, convnetjs.LossLayer);
   var pro = convnetjs.SoftmaxLayer.prototype;
 
   /**
@@ -109,4 +109,4 @@ goog.scope(function() {
     this.layer_type = json.layer_type;
     this.num_inputs = json.num_inputs;
   };
- });
+});

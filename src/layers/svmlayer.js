@@ -1,12 +1,12 @@
 goog.provide('convnetjs.SVMLayer');
-goog.require('convnetjs.Layer');
+goog.require('convnetjs.LossLayer');
 
 
 goog.scope(function() {
   /**
    * @constructor
    * @param {Object<string,*>=} opt Configuration options for layer
-   * @extends {convnetjs.Layer}
+   * @extends {convnetjs.LossLayer}
    * @export
    */
   convnetjs.SVMLayer = function(opt) {
@@ -19,7 +19,7 @@ goog.scope(function() {
     this.out_sy = 1;
     this.layer_type = 'svm';
   };
-  goog.inherits(convnetjs.SVMLayer, convnetjs.Layer);
+  goog.inherits(convnetjs.SVMLayer, convnetjs.LossLayer);
   var pro = convnetjs.SVMLayer.prototype;
 
   /**
@@ -89,4 +89,4 @@ goog.scope(function() {
     this.layer_type = json.layer_type;
     this.num_inputs = json.num_inputs;
   };
- });
+});

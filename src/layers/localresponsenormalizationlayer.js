@@ -137,4 +137,4 @@ goog.scope(function() {
     this.out_depth = json.out_depth;
     this.layer_type = json.layer_type;
   };
- });
+});

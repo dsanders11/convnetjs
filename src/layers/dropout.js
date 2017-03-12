@@ -96,4 +96,4 @@ goog.scope(function() {
     this.layer_type = json.layer_type;
     this.drop_prob = json.drop_prob;
   };
- });
+});

@@ -1,5 +1,5 @@
 goog.provide('convnetjs.RegressionLayer');
-goog.require('convnetjs.Layer');
+goog.require('convnetjs.LossLayer');
 
 
 goog.scope(function() {
@@ -9,7 +9,7 @@ goog.scope(function() {
    * and y is the user-provided array of "correct" values.
    * @constructor
    * @param {Object<string,*>=} opt Configuration options for layer
-   * @extends {convnetjs.Layer}
+   * @extends {convnetjs.LossLayer}
    * @export
    */
   convnetjs.RegressionLayer = function(opt) {
@@ -22,7 +22,7 @@ goog.scope(function() {
     this.out_sy = 1;
     this.layer_type = 'regression';
   };
-  goog.inherits(convnetjs.RegressionLayer, convnetjs.Layer);
+  goog.inherits(convnetjs.RegressionLayer, convnetjs.LossLayer);
   var pro = convnetjs.RegressionLayer.prototype;
 
   /**
@@ -34,10 +34,9 @@ goog.scope(function() {
     return V; // identity function
   };
 
-  // y is a list here of size num_inputs
-  // or it can be a number if only one value is regressed
-  // or it can be a struct {dim: i, val: x} where we only want to
-  // regress on dimension i and asking it to have value x
+  /**
+   * @override
+   */
   pro.backward = function(y) {
     // compute and accumulate gradient wrt weights and bias of this layer
     var x = this.in_act;
@@ -96,4 +95,4 @@ goog.scope(function() {
     this.layer_type = json.layer_type;
     this.num_inputs = json.num_inputs;
   };
- });
+});
