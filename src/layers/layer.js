@@ -35,9 +35,13 @@ goog.scope(function() {
 
   /**
    * @override
-   * @abstract
    */
-  convnetjs.Layer.prototype.fromJSON = function(json) { };
+  convnetjs.Layer.prototype.fromJSON = function(json) {
+    this.out_depth = /** @type {number} */ (json.out_depth);
+    this.out_sx = /** @type {number} */ (json.out_sx);
+    this.out_sy = /** @type {number} */ (json.out_sy);
+    this.layer_type = /** @type {number} */ (json.layer_type);
+  };
 
   /**
    * @override

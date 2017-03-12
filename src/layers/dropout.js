@@ -90,10 +90,8 @@ goog.scope(function() {
    * @override
    */
   pro.fromJSON = function(json) {
-    this.out_depth = json.out_depth;
-    this.out_sx = json.out_sx;
-    this.out_sy = json.out_sy;
-    this.layer_type = json.layer_type;
+    goog.base(this, 'fromJSON', json);
+
     this.drop_prob = json.drop_prob;
   };
 });

@@ -16,9 +16,9 @@ goog.scope(function() {
     opt = opt || {};
 
     // computed
-    this.out_sx = opt.in_sx;
-    this.out_sy = opt.in_sy;
-    this.out_depth = opt.in_depth;
+    this.out_sx = /** @type {number} */ (opt.in_sx);
+    this.out_sy = /** @type {number} */ (opt.in_sy);
+    this.out_depth = /** @type {number} */ (opt.in_depth);
     this.layer_type = 'relu';
   };
   goog.inherits(convnetjs.ReluLayer, convnetjs.Layer);
@@ -70,15 +70,5 @@ goog.scope(function() {
     json.out_sy = this.out_sy;
     json.layer_type = this.layer_type;
     return json;
-  };
-
-  /**
-   * @override
-   */
-  pro.fromJSON = function(json) {
-    this.out_depth = json.out_depth;
-    this.out_sx = json.out_sx;
-    this.out_sy = json.out_sy;
-    this.layer_type = json.layer_type;
   };
 });

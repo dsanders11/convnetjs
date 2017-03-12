@@ -140,10 +140,8 @@ goog.scope(function() {
    * @override
    */
   pro.fromJSON = function(json) {
-    this.out_depth = /** @type {number} */ (json.out_depth);
-    this.out_sx = /** @type {number} */ (json.out_sx);
-    this.out_sy = /** @type {number} */ (json.out_sy);
-    this.layer_type = json.layer_type;
+    goog.base(this, 'fromJSON', json);
+
     this.sx = json.sx;
     this.sy = json.sy;
     this.stride = json.stride;

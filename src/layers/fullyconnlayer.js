@@ -24,7 +24,7 @@ goog.scope(function() {
     this.l2_decay_mul = typeof opt.l2_decay_mul !== 'undefined' ? opt.l2_decay_mul : 1.0;
 
     // computed
-    this.num_inputs = opt.in_sx * opt.in_sy * opt.in_depth;
+    this.num_inputs = /** @type {number} */ (opt.in_sx * opt.in_sy * opt.in_depth);
     this.out_sx = 1;
     this.out_sy = 1;
     this.layer_type = 'fc';
@@ -113,11 +113,9 @@ goog.scope(function() {
    * @override
    */
   pro.fromJSON = function(json) {
-    this.out_depth = json.out_depth;
-    this.out_sx = json.out_sx;
-    this.out_sy = json.out_sy;
-    this.layer_type = json.layer_type;
-    this.num_inputs = json.num_inputs;
+    goog.base(this, 'fromJSON', json);
+
+    this.num_inputs = /** @type {number} */ (json.num_inputs);
     this.l1_decay_mul = typeof json.l1_decay_mul !== 'undefined' ? json.l1_decay_mul : 1.0;
     this.l2_decay_mul = typeof json.l2_decay_mul !== 'undefined' ? json.l2_decay_mul : 1.0;
     this.filters = [];

@@ -18,9 +18,9 @@ goog.scope(function() {
     // required
     this.out_depth = opt.filters;
     this.sx = opt.sx; // filter size. Should be odd if possible, it's cleaner.
-    this.in_depth = opt.in_depth;
-    this.in_sx = opt.in_sx;
-    this.in_sy = opt.in_sy;
+    this.in_depth = /** @type {number} */ (opt.in_depth);
+    this.in_sx = /** @type {number} */ (opt.in_sx);
+    this.in_sy = /** @type {number} */ (opt.in_sy);
 
     // optional
     this.sy = typeof opt.sy !== 'undefined' ? opt.sy : this.sx;
@@ -171,14 +171,12 @@ goog.scope(function() {
    * @override
    */
   pro.fromJSON = function(json) {
-    this.out_depth = json.out_depth;
-    this.out_sx = json.out_sx;
-    this.out_sy = json.out_sy;
-    this.layer_type = json.layer_type;
-    this.sx = json.sx; // filter size in x, y dims
-    this.sy = json.sy;
-    this.stride = json.stride;
-    this.in_depth = json.in_depth; // depth of input volume
+    goog.base(this, 'fromJSON', json);
+
+    this.sx = /** @type {number} */ (json.sx); // filter size in x, y dims
+    this.sy = /** @type {number} */ (json.sy);
+    this.stride = /** @type {number} */ (json.stride);
+    this.in_depth = /** @type {number} */ (json.in_depth); // depth of input volume
     this.filters = [];
     this.l1_decay_mul = typeof json.l1_decay_mul !== 'undefined' ? json.l1_decay_mul : 1.0;
     this.l2_decay_mul = typeof json.l2_decay_mul !== 'undefined' ? json.l2_decay_mul : 1.0;
