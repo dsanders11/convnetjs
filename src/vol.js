@@ -32,6 +32,9 @@ goog.scope(function() {
     /** @type {number} */
     this.sy = -1;
 
+    /** @type {number} */
+    this.depth = -1;
+
     if(Array.isArray(sx)) {
       // we were given a list in sx, assume 1D volume and fill it up
       this.sx = 1;
@@ -48,7 +51,7 @@ goog.scope(function() {
       // we were given dimensions of the vol
       this.sx = sx;
       this.sy = /** @type {number} */ (opt_sy);
-      this.depth = opt_depth;
+      this.depth = /** @type {number} */ (opt_depth);
       var n = sx*opt_sy*opt_depth;
       this['w'] = new Float64Array(n);
       this['dw'] = new Float64Array(n);
@@ -74,7 +77,7 @@ goog.scope(function() {
    */
   pro.getSx = function() {
     return this.sx;
-  }
+  };
 
   /**
    * @return {number}
@@ -82,7 +85,7 @@ goog.scope(function() {
    */
   pro.getSy = function() {
     return this.sy;
-  }
+  };
 
   /**
    * @return {number}
@@ -90,7 +93,7 @@ goog.scope(function() {
    */
   pro.getDepth = function() {
     return this.depth;
-  }
+  };
 
   /**
    * @param {number} x x coordinate
