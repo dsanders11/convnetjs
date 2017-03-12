@@ -214,6 +214,15 @@ goog.scope(function() {
   };
 
   /**
+   * @param {number} layer
+   * @return {convnetjs.Vol}
+   * @export
+   */
+  pro.getLayerOutActivations = function(layer) {
+    return this.layers[layer].getOutActivations();
+  };
+
+  /**
    * @override
    * @export
    */

@@ -69,6 +69,30 @@ goog.scope(function() {
   var pro = Vol.prototype;
 
   /**
+   * @return {number}
+   * @export
+   */
+  pro.getSx = function() {
+    return this.sx;
+  }
+
+  /**
+   * @return {number}
+   * @export
+   */
+  pro.getSy = function() {
+    return this.sy;
+  }
+
+  /**
+   * @return {number}
+   * @export
+   */
+  pro.getDepth = function() {
+    return this.depth;
+  }
+
+  /**
    * @param {number} x x coordinate
    * @param {number} y y coordinate
    * @param {number} d depth
@@ -208,6 +232,16 @@ goog.scope(function() {
   };
 
   /**
+   * @return {*}
+   * @export
+   */
+  pro.toJSONWithGradients = function() {
+    var json = this.toJSON();
+    json['dw'] = this['dw'];
+    return json;
+  };
+
+  /**
    * @override
    * @export
    */
@@ -222,6 +256,12 @@ goog.scope(function() {
     // copy over the elements.
     for(var i=0;i<n;i++) {
       this['w'][i] = json['w'][i];
+    }
+
+    if (typeof json['dw'] !== 'undefined') {
+      for(var i=0;i<n;i++) {
+        this['dw'][i] = json['dw'][i];
+      }
     }
   };
 });

@@ -37,6 +37,14 @@ goog.scope(function() {
   };
 
   /**
+   * @return {convnetjs.Vol}
+   * @export
+   */
+  convnetjs.Layer.prototype.getOutActivations = function() {
+    return this.out_act;
+  };
+
+  /**
    * @override
    * @export
    */
