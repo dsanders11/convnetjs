@@ -18,10 +18,14 @@ goog.scope(function() {
    * with. If c is missing, fills the Vol with random numbers.
    *
    * @constructor
+   * @param {(!Array.<number>|number)} sx
+   * @param {number=} opt_sy optional height
+   * @param {number=} opt_depth optional depth
+   * @param {number=} opt_c optional value to initialize volume with
    * @implements {convnetjs.JSONSerializable}
    * @export
    */
-  convnetjs.Vol = function(sx, sy, depth, c) {
+  convnetjs.Vol = function(sx, opt_sy, opt_depth, opt_c) {
     // this is how you check if a variable is an array. Oh, Javascript :)
     if(Object.prototype.toString.call(sx) === '[object Array]') {
       // we were given a list in sx, assume 1D volume and fill it up
@@ -38,53 +42,87 @@ goog.scope(function() {
     } else {
       // we were given dimensions of the vol
       this.sx = sx;
-      this.sy = sy;
-      this.depth = depth;
-      var n = sx*sy*depth;
+      this.sy = opt_sy;
+      this.depth = opt_depth;
+      var n = sx*opt_sy*opt_depth;
       this.w = new Float64Array(n);
       this.dw = new Float64Array(n);
-      if(typeof c === 'undefined') {
+      if(typeof opt_c === 'undefined') {
         // weight normalization is done to equalize the output
         // variance of every neuron, otherwise neurons with a lot
         // of incoming connections have outputs of larger variance
-        var scale = Math.sqrt(1.0/(sx*sy*depth));
+        var scale = Math.sqrt(1.0/(sx*opt_sy*opt_depth));
         for(var i=0;i<n;i++) {
           this.w[i] = convnetjs.randn(0.0, scale);
         }
       } else {
-        for(var i=0;i<n;i++) {
-          this.w[i] = c;
-        }
+        this.w.fill(opt_c);
       }
     }
   };
   var pro = convnetjs.Vol.prototype;
 
+  /**
+   * @param {number} x x coordinate
+   * @param {number} y y coordinate
+   * @param {number} d depth
+   * @return {number}
+   */
   pro.get = function(x, y, d) {
     var ix=((this.sx * y)+x)*this.depth+d;
     return this.w[ix];
   };
 
+  /**
+   * @param {number} x x coordinate
+   * @param {number} y y coordinate
+   * @param {number} d depth
+   * @param {number} v value
+   */
   pro.set = function(x, y, d, v) {
     var ix=((this.sx * y)+x)*this.depth+d;
     this.w[ix] = v;
   };
 
+  /**
+   * @param {number} x x coordinate
+   * @param {number} y y coordinate
+   * @param {number} d depth
+   * @param {number} v value
+   */
   pro.add = function(x, y, d, v) {
     var ix=((this.sx * y)+x)*this.depth+d;
     this.w[ix] += v;
   };
 
+  /**
+   * @param {number} x x coordinate
+   * @param {number} y y coordinate
+   * @param {number} d depth
+   * @return {number}
+   */
   pro.get_grad = function(x, y, d) {
     var ix = ((this.sx * y)+x)*this.depth+d;
     return this.dw[ix];
   };
 
+  /**
+   * @param {number} x x coordinate
+   * @param {number} y y coordinate
+   * @param {number} d depth
+   * @param {number} v value
+   */
   pro.set_grad = function(x, y, d, v) {
     var ix = ((this.sx * y)+x)*this.depth+d;
     this.dw[ix] = v;
   };
 
+  /**
+   * @param {number} x x coordinate
+   * @param {number} y y coordinate
+   * @param {number} d depth
+   * @param {number} v value
+   */
   pro.add_grad = function(x, y, d, v) {
     var ix = ((this.sx * y)+x)*this.depth+d;
     this.dw[ix] += v;

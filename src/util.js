@@ -114,8 +114,8 @@ goog.scope(function() {
 
   /**
    * syntactic sugar function for getting default parameter values
-   * @param {Object<string, *>} opt
-   * @param {string} field_name
+   * @param {!Object<string, *>} opt
+   * @param {(string|!Array)} field_name
    * @param {*} default_value
    * @return {*}
    * @export

@@ -1,22 +1,31 @@
-(function(global) {
-  "use strict";
-  var Vol = global.Vol; // convenience
+/**
+ * @fileoverview
+ * @suppress {extraRequire}
+ */
+goog.provide('convnetjs.vol.util');
+goog.require('convnetjs.Vol');
+goog.require('convnetjs.util');
 
-  // Volume utilities
-  // intended for use with data augmentation
-  // crop is the size of output
-  // dx,dy are offset wrt incoming volume, of the shift
-  // fliplr is boolean on whether we also want to flip left<->right
-  var augment = function(V, crop, dx, dy, fliplr) {
+
+goog.scope(function() {
+  /**
+   * @param {convnetjs.Vol} V
+   * @param {number} crop the size of output
+   * @param {number} dx x offset wrt incoming volume, of the shift
+   * @param {number} dy y offset wrt incoming volume, of the shift
+   * @param {boolean} fliplr whether we also want to flip left<->right
+   * @return {convnetjs.Vol}
+   */
+  convnetjs.augment = function(V, crop, dx, dy, fliplr) {
     // note assumes square outputs of size crop x crop
-    if(typeof(fliplr)==='undefined') var fliplr = false;
-    if(typeof(dx)==='undefined') var dx = global.randi(0, V.sx - crop);
-    if(typeof(dy)==='undefined') var dy = global.randi(0, V.sy - crop);
+    if(typeof(fliplr)==='undefined') fliplr = false;
+    if(typeof(dx)==='undefined') dx = convnetjs.randi(0, V.sx - crop);
+    if(typeof(dy)==='undefined') dy = convnetjs.randi(0, V.sy - crop);
 
     // randomly sample a crop in the input volume
     var W;
     if(crop !== V.sx || dx!==0 || dy!==0) {
-      W = new Vol(crop, crop, V.depth, 0.0);
+      W = new convnetjs.Vol(crop, crop, V.depth, 0.0);
       for(var x=0;x<crop;x++) {
         for(var y=0;y<crop;y++) {
           if(x+dx<0 || x+dx>=V.sx || y+dy<0 || y+dy>=V.sy) continue; // oob
@@ -42,13 +51,15 @@
       W = W2; //swap
     }
     return W;
-  }
+  };
 
-  // img is a DOM element that contains a loaded image
-  // returns a Vol of size (W, H, 4). 4 is for RGBA
-  var img_to_vol = function(img, convert_grayscale) {
-
-    if(typeof(convert_grayscale)==='undefined') var convert_grayscale = false;
+  /**
+   * @param {HTMLImageElement} img a DOM element that contains a loaded image
+   * @param {boolean} convert_grayscale
+   * @return {(boolean|convnetjs.Vol)} Vol of size (W, H, 4). 4 is for RGBA
+   */
+  convnetjs.img_to_vol = function(img, convert_grayscale) {
+    if(typeof(convert_grayscale)==='undefined') convert_grayscale = false;
 
     var canvas = document.createElement('canvas');
     canvas.width = img.width;
@@ -81,16 +92,16 @@
     var p = img_data.data;
     var W = img.width;
     var H = img.height;
-    var pv = []
+    var pv = [];
     for(var i=0;i<p.length;i++) {
       pv.push(p[i]/255.0-0.5); // normalize image pixels to [-0.5, 0.5]
     }
-    var x = new Vol(W, H, 4, 0.0); //input volume (image)
+    var x = new convnetjs.Vol(W, H, 4, 0.0); //input volume (image)
     x.w = pv;
 
     if(convert_grayscale) {
       // flatten into depth=1 array
-      var x1 = new Vol(W, H, 1, 0.0);
+      var x1 = new convnetjs.Vol(W, H, 1, 0.0);
       for(var i=0;i<W;i++) {
         for(var j=0;j<H;j++) {
           x1.set(i,j,0,x.get(i,j,0));
@@ -100,9 +111,5 @@
     }
 
     return x;
-  }
-
-  global.augment = augment;
-  global.img_to_vol = img_to_vol;
-
-})(convnetjs);
+  };
+});

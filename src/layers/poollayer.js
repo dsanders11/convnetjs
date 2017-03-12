@@ -14,10 +14,10 @@ goog.scope(function() {
     opt = opt || {};
 
     // required
-    this.sx = opt.sx; // filter size
-    this.in_depth = opt.in_depth;
-    this.in_sx = opt.in_sx;
-    this.in_sy = opt.in_sy;
+    this.sx = /** @type {number} */ (opt.sx); // filter size
+    this.in_depth = /** @type {number} */ (opt.in_depth);
+    this.in_sx = /** @type {number} */ (opt.in_sx);
+    this.in_sy = /** @type {number} */ (opt.in_sy);
 
     // optional
     this.sy = typeof opt.sy !== 'undefined' ? opt.sy : this.sx;
@@ -35,6 +35,9 @@ goog.scope(function() {
   };
   goog.inherits(convnetjs.PoolLayer, convnetjs.Layer);
   var pro = convnetjs.PoolLayer.prototype;
+
+  /** @type {convnetjs.Vol} */
+  pro.in_act = null;
 
   /**
    * @override
@@ -133,9 +136,9 @@ goog.scope(function() {
    * @override
    */
   pro.fromJSON = function(json) {
-    this.out_depth = json.out_depth;
-    this.out_sx = json.out_sx;
-    this.out_sy = json.out_sy;
+    this.out_depth = /** @type {number} */ (json.out_depth);
+    this.out_sx = /** @type {number} */ (json.out_sx);
+    this.out_sy = /** @type {number} */ (json.out_sy);
     this.layer_type = json.layer_type;
     this.sx = json.sx;
     this.sy = json.sy;
