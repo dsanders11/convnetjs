@@ -15,7 +15,7 @@ goog.scope(function() {
    * @param {!convnetjs.Net} net
    * @param {!Object<string,*>=} opt
    */
-  var Trainer = function(net, opt) {
+  convnetjs.Trainer = function(net, opt) {
     this.net = net;
 
     var options = opt || {};
