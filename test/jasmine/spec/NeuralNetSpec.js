@@ -12,20 +12,17 @@ describe("Simple Fully-Connected Neural Net Classifier", function() {
     layer_defs.push({type:'softmax', num_classes:3});
     net.makeLayers(layer_defs);
 
-    trainer = new convnetjs.SGDTrainer(net, 
+    trainer = new convnetjs.SGDTrainer(net,
           {learning_rate:0.0001, momentum:0.0, batch_size:1, l2_decay:0.0});
   });
 
   it("should be possible to initialize", function() {
-    
     // tanh are their own layers. Softmax gets its own fully connected layer.
     // this should all get desugared just fine.
-    expect(net.layers.length).toEqual(7); 
-    
+    expect(net.layers.length).toEqual(7);
   });
 
   it("should forward prop volumes to probabilities", function() {
-
     var x = new convnetjs.Vol([0.2, -0.3]);
     var probability_volume = net.forward(x);
 
@@ -36,11 +33,9 @@ describe("Simple Fully-Connected Neural Net Classifier", function() {
       expect(w[i]).toBeLessThan(1.0);
     }
     expect(w[0]+w[1]+w[2]).toBeCloseTo(1.0);
-
   });
 
   it("should increase probabilities for ground truth class when trained", function() {
-
     // lets test 100 random point and label settings
     // note that this should work since l2 and l1 regularization are off
     // an issue is that if step size is too high, this could technically fail...
@@ -52,13 +47,11 @@ describe("Simple Fully-Connected Neural Net Classifier", function() {
       var pv2 = net.forward(x);
       expect(pv2.w[gti]).toBeGreaterThan(pv.w[gti]);
     }
-
   });
 
   it("should compute correct gradient at data", function() {
-
     // here we only test the gradient at data, but if this is
-    // right then that's comforting, because it is a function 
+    // right then that's comforting, because it is a function
     // of all gradients above, for all layers.
 
     var x = new convnetjs.Vol([Math.random() * 2 - 1, Math.random() * 2 - 1]);
@@ -68,7 +61,6 @@ describe("Simple Fully-Connected Neural Net Classifier", function() {
     var delta = 0.000001;
 
     for(var i=0;i<x.w.length;i++) {
-
       var grad_analytic = x.dw[i];
 
       var xold = x.w[i];
@@ -82,7 +74,6 @@ describe("Simple Fully-Connected Neural Net Classifier", function() {
       var rel_error = Math.abs(grad_analytic - grad_numeric)/Math.abs(grad_analytic + grad_numeric);
       console.log(i + ': numeric: ' + grad_numeric + ', analytic: ' + grad_analytic + ' => rel error ' + rel_error);
       expect(rel_error).toBeLessThan(1e-2);
-
     }
   });
 });

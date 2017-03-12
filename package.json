@@ -1,0 +1,35 @@
+{
+  "dependencies": {},
+  "devDependencies": {
+    "del": "^2.0.2",
+    "google-closure-compiler": "20170218.0.0",
+    "google-closure-library": "20170218.0.0",
+    "gulp": "^3.9.0",
+    "gulp-clang-format": "1.0.23",
+    "gulp-concat": "^2.6.0",
+    "gulp-debug": "^3.1.0",
+    "gulp-size": "^2.0.0",
+    "gulp-sourcemaps": "^2.4.1",
+    "gulp-util": "^3.0.6",
+    "jasmine-core": "2.5.2",
+    "karma": "~1.4.1",
+    "karma-chrome-launcher": "~2.0.0",
+    "karma-coverage": "1.1.1",
+    "karma-firefox-launcher": "~1.0.0",
+    "karma-jasmine": "1.1.0",
+    "karma-remap-istanbul": "0.6.0",
+    "karma-requirejs": "~0.2.1",
+    "karma-sourcemap-loader": "^0.3.7",
+    "matchdep": "~1.0.0",
+    "requirejs": "~2.1.11",
+    "run-sequence": "^1.1.4",
+    "serve-static": "^1.10.0",
+    "through2": "^2.0.0"
+  },
+  "scripts": {
+    "test": "gulp test"
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  }
+}
