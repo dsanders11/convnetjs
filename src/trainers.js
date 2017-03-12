@@ -14,6 +14,7 @@ goog.scope(function() {
    * @constructor
    * @param {!convnetjs.Net} net
    * @param {!Object<string,*>=} opt
+   * @export
    */
   convnetjs.Trainer = function(net, opt) {
     this.net = net;
@@ -46,6 +47,7 @@ goog.scope(function() {
    * @param {!convnetjs.Vol} x
    * @param {!Array} y output vector
    * @return {!Object}
+   * @export
    */
   convnetjs.Trainer.prototype.train = function(x, y) {
     var start = new Date().getTime();

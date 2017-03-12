@@ -67,6 +67,7 @@ goog.scope(function() {
    * @param {number} y y coordinate
    * @param {number} d depth
    * @return {number}
+   * @export
    */
   pro.get = function(x, y, d) {
     var ix=((this.sx * y)+x)*this.depth+d;
@@ -78,6 +79,7 @@ goog.scope(function() {
    * @param {number} y y coordinate
    * @param {number} d depth
    * @param {number} v value
+   * @export
    */
   pro.set = function(x, y, d, v) {
     var ix=((this.sx * y)+x)*this.depth+d;
@@ -89,6 +91,7 @@ goog.scope(function() {
    * @param {number} y y coordinate
    * @param {number} d depth
    * @param {number} v value
+   * @export
    */
   pro.add = function(x, y, d, v) {
     var ix=((this.sx * y)+x)*this.depth+d;
@@ -100,6 +103,7 @@ goog.scope(function() {
    * @param {number} y y coordinate
    * @param {number} d depth
    * @return {number}
+   * @export
    */
   pro.get_grad = function(x, y, d) {
     var ix = ((this.sx * y)+x)*this.depth+d;
@@ -111,6 +115,7 @@ goog.scope(function() {
    * @param {number} y y coordinate
    * @param {number} d depth
    * @param {number} v value
+   * @export
    */
   pro.set_grad = function(x, y, d, v) {
     var ix = ((this.sx * y)+x)*this.depth+d;
@@ -122,6 +127,7 @@ goog.scope(function() {
    * @param {number} y y coordinate
    * @param {number} d depth
    * @param {number} v value
+   * @export
    */
   pro.add_grad = function(x, y, d, v) {
     var ix = ((this.sx * y)+x)*this.depth+d;
@@ -130,16 +136,18 @@ goog.scope(function() {
 
   /**
    * @return {!convnetjs.Vol}
+   * @export
    */
   pro.cloneAndZero = function() {
-    return new convnetjs.Vol(this.sx, this.sy, this.depth, 0.0);
+    return new Vol(this.sx, this.sy, this.depth, 0.0);
   };
 
   /**
    * @return {!convnetjs.Vol}
+   * @export
    */
   pro.clone = function() {
-    var V = new convnetjs.Vol(this.sx, this.sy, this.depth, 0.0);
+    var V = new Vol(this.sx, this.sy, this.depth, 0.0);
     var n = this.w.length;
     for(var i=0;i<n;i++) {
       V.w[i] = this.w[i];
@@ -149,6 +157,7 @@ goog.scope(function() {
 
   /**
    * @param {!convnetjs.Vol} V
+   * @export
    */
   pro.addFrom = function(V) {
     for(var k=0;k<this.w.length;k++) {
@@ -159,6 +168,7 @@ goog.scope(function() {
   /**
    * @param {!convnetjs.Vol} V
    * @param {number} a
+   * @export
    */
   pro.addFromScaled = function(V, a) {
     for(var k=0;k<this.w.length;k++) {
@@ -168,6 +178,7 @@ goog.scope(function() {
 
   /**
    * @param {number} a
+   * @export
    */
   pro.setConst = function(a) {
     for(var k=0;k<this.w.length;k++) {
@@ -177,6 +188,7 @@ goog.scope(function() {
 
   /**
    * @override
+   * @export
    */
   pro.toJSON = function() {
     // todo: we may want to only save d most significant digits to save space
@@ -191,6 +203,7 @@ goog.scope(function() {
 
   /**
    * @override
+   * @export
    */
   pro.fromJSON = function(json) {
     this.sx = json.sx;

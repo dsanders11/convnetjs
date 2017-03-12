@@ -40,6 +40,7 @@ goog.scope(function() {
   /**
    * takes a list of layer definitions and creates the network layer objects
    * @param {!Object} defs
+   * @export
    */
   pro.makeLayers = function(defs) {
     // few checks
@@ -133,6 +134,7 @@ goog.scope(function() {
    * @param {!convnetjs.Vol} V
    * @param {boolean} is_training
    * @return {!convnetjs.Vol}
+   * @export
    */
   pro.forward = function(V, is_training) {
     if(typeof(is_training) === 'undefined') is_training = false;
@@ -147,6 +149,7 @@ goog.scope(function() {
    * @param {!convnetjs.Vol} V
    * @param {number} y
    * @return {number}
+   * @export
    */
   pro.getCostLoss = function(V, y) {
     this.forward(V, false);
@@ -159,6 +162,7 @@ goog.scope(function() {
    * backprop: compute gradients wrt all parameters
    * @param {(Array|Float32Array|number|Object)} y
    * @return {number}
+   * @export
    */
   pro.backward = function(y) {
     var N = this.layers.length;
@@ -171,6 +175,7 @@ goog.scope(function() {
 
   /**
    * @return {!Array<!Object>}
+   * @export
    */
   pro.getParamsAndGrads = function() {
     // accumulate parameters and gradients for the entire network
@@ -186,6 +191,7 @@ goog.scope(function() {
 
   /**
    * @return {number}
+   * @export
    */
   pro.getPrediction = function() {
     // this is a convenience function for returning the argmax
@@ -204,6 +210,7 @@ goog.scope(function() {
 
   /**
    * @override
+   * @export
    */
   pro.toJSON = function() {
     var json = {};
@@ -216,6 +223,7 @@ goog.scope(function() {
 
   /**
    * @override
+   * @export
    */
   pro.fromJSON = function(json) {
     this.layers = [];

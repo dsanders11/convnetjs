@@ -18,16 +18,19 @@ goog.scope(function() {
    * @param {boolean} is_training
    * @return {!convnetjs.Vol}
    * @abstract
+   * @export
    */
   convnetjs.Layer.prototype.forward = function(V, is_training) { };
 
   /**
    * @abstract
+   * @export
    */
   convnetjs.Layer.prototype.backward = function() { };
 
   /**
    * @return {!Array}
+   * @export
    */
   convnetjs.Layer.prototype.getParamsAndGrads = function() {
     return [];
@@ -35,6 +38,7 @@ goog.scope(function() {
 
   /**
    * @override
+   * @export
    */
   convnetjs.Layer.prototype.fromJSON = function(json) {
     this.out_depth = /** @type {number} */ (json.out_depth);
@@ -46,6 +50,7 @@ goog.scope(function() {
   /**
    * @override
    * @abstract
+   * @export
    */
   convnetjs.Layer.prototype.toJSON = function() { };
 });

@@ -18,6 +18,7 @@ goog.scope(function() {
    * @param {boolean} is_training
    * @return {!convnetjs.Vol}
    * @abstract
+   * @export
    */
   convnetjs.LossLayer.prototype.forward = function(V, is_training) { };
 
@@ -26,11 +27,13 @@ goog.scope(function() {
    * @param {(Array|Float64Array|number|Object)} y
    * @return {number}
    * @abstract
+   * @export
    */
   convnetjs.LossLayer.prototype.backward = function(y) { };
 
   /**
    * @return {!Array}
+   * @export
    */
   convnetjs.LossLayer.prototype.getParamsAndGrads = function() {
     return [];
@@ -39,12 +42,14 @@ goog.scope(function() {
   /**
    * @override
    * @abstract
+   * @export
    */
   convnetjs.LossLayer.prototype.fromJSON = function(json) { };
 
   /**
    * @override
    * @abstract
+   * @export
    */
   convnetjs.LossLayer.prototype.toJSON = function() { };
 });

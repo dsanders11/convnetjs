@@ -10,11 +10,13 @@ goog.scope(function() {
 
   /**
    * @return {*}
+   * @export
    */
   pro.toJSON = function() { };
 
   /**
    * @param {!Object} json
+   * @export
    */
   pro.fromJSON = function(json) { };
 });

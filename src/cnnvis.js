@@ -21,6 +21,7 @@ goog.scope(function() {
   /**
    * @param {number} step
    * @param {number} y
+   * @export
    */
   cnnvis.Graph.prototype.add = function(step, y) {
     var time = new Date().getTime(); // in ms
@@ -33,6 +34,7 @@ goog.scope(function() {
 
   /**
    * @param {HTMLCanvasElement} canv
+   * @export
    */
   cnnvis.Graph.prototype.drawSelf = function(canv) {
     var pad = 25;
@@ -118,6 +120,7 @@ goog.scope(function() {
   /**
    * @param {number} step
    * @param {!Array.<number>} yl
+   * @export
    */
   cnnvis.MultiGraph.prototype.add = function(step, yl) {
     var time = new Date().getTime(); // in ms
@@ -137,6 +140,7 @@ goog.scope(function() {
 
   /**
    * @param {HTMLCanvasElement} canv
+   * @export
    */
   cnnvis.MultiGraph.prototype.drawSelf = function(canv) {
     var pad = 25;

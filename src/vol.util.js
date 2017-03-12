@@ -15,6 +15,7 @@ goog.scope(function() {
    * @param {number} dy y offset wrt incoming volume, of the shift
    * @param {boolean} fliplr whether we also want to flip left<->right
    * @return {convnetjs.Vol}
+   * @export
    */
   convnetjs.augment = function(V, crop, dx, dy, fliplr) {
     // note assumes square outputs of size crop x crop
@@ -57,6 +58,7 @@ goog.scope(function() {
    * @param {HTMLImageElement} img a DOM element that contains a loaded image
    * @param {boolean} convert_grayscale
    * @return {(boolean|convnetjs.Vol)} Vol of size (W, H, 4). 4 is for RGBA
+   * @export
    */
   convnetjs.img_to_vol = function(img, convert_grayscale) {
     if(typeof(convert_grayscale)==='undefined') convert_grayscale = false;

@@ -20,6 +20,7 @@ goog.scope(function() {
 
   /**
    * @param {number} x
+   * @export
    */
   cnnutil.Window.prototype.add = function(x) {
     this.v.push(x);
@@ -32,12 +33,16 @@ goog.scope(function() {
 
   /**
    * @return {number}
+   * @export
    */
   cnnutil.Window.prototype.get_average = function() {
     if(this.v.length < this.minsize) return -1;
     else return this.sum/this.v.length;
   };
 
+  /**
+   * @export
+   */
   cnnutil.Window.prototype.reset = function() {
     this.v = [];
     this.sum = 0;
