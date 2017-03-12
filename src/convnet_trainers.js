@@ -23,7 +23,7 @@
     this.gsum = []; // last iteration gradients (used for momentum calculations)
     this.xsum = []; // used in adam or adadelta
 
-    // check if regression is expected 
+    // check if regression is expected
     if(this.net.layers[this.net.layers.length - 1].layer_type === "regression")
       this.regression = true;
     else
@@ -47,7 +47,7 @@
 
       if(this.regression && y.constructor !== Array)
         console.log("Warning: a regression net requires an array as training output vector.");
-      
+
       this.k++;
       if(this.k % this.batch_size === 0) {
 
@@ -107,7 +107,7 @@
               p[j] += dx;
             } else if(this.method === 'windowgrad') {
               // this is adagrad but with a moving window weighted average
-              // so the gradient is not accumulated over the entire history of the run. 
+              // so the gradient is not accumulated over the entire history of the run.
               // it's also referred to as Idea #1 in Zeiler paper on Adadelta. Seems reasonable to me!
               gsumi[j] = this.ro * gsumi[j] + (1-this.ro) * gij * gij;
               var dx = - this.learning_rate / Math.sqrt(gsumi[j] + this.eps) * gij; // eps added for better conditioning
@@ -140,16 +140,16 @@
       }
 
       // appending softmax_loss for backwards compatibility, but from now on we will always use cost_loss
-      // in future, TODO: have to completely redo the way loss is done around the network as currently 
+      // in future, TODO: have to completely redo the way loss is done around the network as currently
       // loss is a bit of a hack. Ideally, user should specify arbitrary number of loss functions on any layer
-      // and it should all be computed correctly and automatically. 
-      return {fwd_time: fwd_time, bwd_time: bwd_time, 
+      // and it should all be computed correctly and automatically.
+      return {fwd_time: fwd_time, bwd_time: bwd_time,
               l2_decay_loss: l2_decay_loss, l1_decay_loss: l1_decay_loss,
-              cost_loss: cost_loss, softmax_loss: cost_loss, 
+              cost_loss: cost_loss, softmax_loss: cost_loss,
               loss: cost_loss + l1_decay_loss + l2_decay_loss}
     }
   }
-  
+
   global.Trainer = Trainer;
   global.SGDTrainer = Trainer; // backwards compatibility
 })(convnetjs);

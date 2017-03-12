@@ -10,7 +10,7 @@
   }
 
   Net.prototype = {
-    
+
     // takes a list of layer definitions and creates the network layer objects
     makeLayers: function(defs) {
 
@@ -23,7 +23,7 @@
         var new_defs = [];
         for(var i=0;i<defs.length;i++) {
           var def = defs[i];
-          
+
           if(def.type==='softmax' || def.type==='svm') {
             // add an fc layer here, there is no reason the user should
             // have to worry about this and we almost always want to
@@ -98,7 +98,7 @@
       }
     },
 
-    // forward prop the network. 
+    // forward prop the network.
     // The trainer class passes is_training = true, but when this function is
     // called from outside (not from the trainer), it defaults to prediction mode
     forward: function(V, is_training) {
@@ -116,7 +116,7 @@
       var loss = this.layers[N-1].backward(y);
       return loss;
     },
-    
+
     // backprop: compute gradients wrt all parameters
     backward: function(y) {
       var N = this.layers.length;
@@ -183,6 +183,6 @@
       }
     }
   }
-  
+
   global.Net = Net;
 })(convnetjs);

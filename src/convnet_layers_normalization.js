@@ -1,7 +1,7 @@
 (function(global) {
   "use strict";
   var Vol = global.Vol; // convenience
-  
+
   // a bit experimental layer for now. I think it works but I'm not 100%
   // the gradient check is a bit funky. I'll look into this a bit later.
   // Local Response Normalization in window, along depths of volumes
@@ -54,11 +54,11 @@
       this.out_act = A;
       return this.out_act; // dummy identity function for now
     },
-    backward: function() { 
+    backward: function() {
       // evaluate gradient wrt data
       var V = this.in_act; // we need to set dw of this
       V.dw = global.zeros(V.w.length); // zero out gradient wrt data
-      var A = this.out_act; // computed in forward pass 
+      var A = this.out_act; // computed in forward pass
 
       var n2 = Math.floor(this.n/2);
       for(var x=0;x<V.sx;x++) {
@@ -71,8 +71,8 @@
             var SB2 = SB*SB;
 
             // normalize in a window of size n
-            for(var j=Math.max(0,i-n2);j<=Math.min(i+n2,V.depth-1);j++) {              
-              var aj = V.get(x,y,j); 
+            for(var j=Math.max(0,i-n2);j<=Math.min(i+n2,V.depth-1);j++) {
+              var aj = V.get(x,y,j);
               var g = -aj*this.beta*Math.pow(S,this.beta-1)*this.alpha/this.n*2*aj;
               if(j===i) g+= SB;
               g /= SB2;
@@ -91,7 +91,7 @@
       json.n = this.n;
       json.alpha = this.alpha; // normalize by size
       json.beta = this.beta;
-      json.out_sx = this.out_sx; 
+      json.out_sx = this.out_sx;
       json.out_sy = this.out_sy;
       json.out_depth = this.out_depth;
       json.layer_type = this.layer_type;
@@ -102,13 +102,12 @@
       this.n = json.n;
       this.alpha = json.alpha; // normalize by size
       this.beta = json.beta;
-      this.out_sx = json.out_sx; 
+      this.out_sx = json.out_sx;
       this.out_sy = json.out_sy;
       this.out_depth = json.out_depth;
       this.layer_type = json.layer_type;
     }
   }
-  
 
   global.LocalResponseNormalizationLayer = LocalResponseNormalizationLayer;
 })(convnetjs);

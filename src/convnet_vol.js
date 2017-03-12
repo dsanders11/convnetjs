@@ -5,7 +5,7 @@
   // it is essentially just a 3D volume of numbers, with a
   // width (sx), height (sy), and depth (depth).
   // it is used to hold data for all filters, all volumes,
-  // all weights, and also stores all gradients w.r.t. 
+  // all weights, and also stores all gradients w.r.t.
   // the data. c is optionally a value to initialize the volume
   // with. If c is missing, fills the Vol with random numbers.
   var Vol = function(sx, sy, depth, c) {
@@ -35,11 +35,11 @@
         // variance of every neuron, otherwise neurons with a lot
         // of incoming connections have outputs of larger variance
         var scale = Math.sqrt(1.0/(sx*sy*depth));
-        for(var i=0;i<n;i++) { 
+        for(var i=0;i<n;i++) {
           this.w[i] = global.randn(0.0, scale);
         }
       } else {
-        for(var i=0;i<n;i++) { 
+        for(var i=0;i<n;i++) {
           this.w[i] = c;
         }
       }
@@ -47,29 +47,29 @@
   }
 
   Vol.prototype = {
-    get: function(x, y, d) { 
+    get: function(x, y, d) {
       var ix=((this.sx * y)+x)*this.depth+d;
       return this.w[ix];
     },
-    set: function(x, y, d, v) { 
+    set: function(x, y, d, v) {
       var ix=((this.sx * y)+x)*this.depth+d;
-      this.w[ix] = v; 
+      this.w[ix] = v;
     },
-    add: function(x, y, d, v) { 
+    add: function(x, y, d, v) {
       var ix=((this.sx * y)+x)*this.depth+d;
-      this.w[ix] += v; 
+      this.w[ix] += v;
     },
-    get_grad: function(x, y, d) { 
+    get_grad: function(x, y, d) {
       var ix = ((this.sx * y)+x)*this.depth+d;
-      return this.dw[ix]; 
+      return this.dw[ix];
     },
-    set_grad: function(x, y, d, v) { 
+    set_grad: function(x, y, d, v) {
       var ix = ((this.sx * y)+x)*this.depth+d;
-      this.dw[ix] = v; 
+      this.dw[ix] = v;
     },
-    add_grad: function(x, y, d, v) { 
+    add_grad: function(x, y, d, v) {
       var ix = ((this.sx * y)+x)*this.depth+d;
-      this.dw[ix] += v; 
+      this.dw[ix] += v;
     },
     cloneAndZero: function() { return new Vol(this.sx, this.sy, this.depth, 0.0)},
     clone: function() {
@@ -85,7 +85,7 @@
     toJSON: function() {
       // todo: we may want to only save d most significant digits to save space
       var json = {}
-      json.sx = this.sx; 
+      json.sx = this.sx;
       json.sy = this.sy;
       json.depth = this.depth;
       json.w = this.w;

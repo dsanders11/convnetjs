@@ -12,7 +12,7 @@
     if(typeof(fliplr)==='undefined') var fliplr = false;
     if(typeof(dx)==='undefined') var dx = global.randi(0, V.sx - crop);
     if(typeof(dy)==='undefined') var dy = global.randi(0, V.sy - crop);
-    
+
     // randomly sample a crop in the input volume
     var W;
     if(crop !== V.sx || dx!==0 || dy!==0) {
@@ -101,7 +101,7 @@
 
     return x;
   }
-  
+
   global.augment = augment;
   global.img_to_vol = img_to_vol;
 

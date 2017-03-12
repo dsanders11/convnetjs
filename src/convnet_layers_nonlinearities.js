@@ -1,7 +1,7 @@
 (function(global) {
   "use strict";
   var Vol = global.Vol; // convenience
-  
+
   // Implements ReLU nonlinearity elementwise
   // x -> max(0, x)
   // the output is in [0, inf)
@@ -20,7 +20,7 @@
       var V2 = V.clone();
       var N = V.w.length;
       var V2w = V2.w;
-      for(var i=0;i<N;i++) { 
+      for(var i=0;i<N;i++) {
         if(V2w[i] < 0) V2w[i] = 0; // threshold at 0
       }
       this.out_act = V2;
@@ -51,7 +51,7 @@
       this.out_depth = json.out_depth;
       this.out_sx = json.out_sx;
       this.out_sy = json.out_sy;
-      this.layer_type = json.layer_type; 
+      this.layer_type = json.layer_type;
     }
   }
 
@@ -74,7 +74,7 @@
       var N = V.w.length;
       var V2w = V2.w;
       var Vw = V.w;
-      for(var i=0;i<N;i++) { 
+      for(var i=0;i<N;i++) {
         V2w[i] = 1.0/(1.0+Math.exp(-Vw[i]));
       }
       this.out_act = V2;
@@ -105,7 +105,7 @@
       this.out_depth = json.out_depth;
       this.out_sx = json.out_sx;
       this.out_sy = json.out_sy;
-      this.layer_type = json.layer_type; 
+      this.layer_type = json.layer_type;
     }
   }
 
@@ -130,7 +130,7 @@
   MaxoutLayer.prototype = {
     forward: function(V, is_training) {
       this.in_act = V;
-      var N = this.out_depth; 
+      var N = this.out_depth;
       var V2 = new Vol(this.out_sx, this.out_sy, this.out_depth, 0.0);
 
       // optimization branch. If we're operating on 1D arrays we dont have
@@ -219,7 +219,7 @@
       this.out_depth = json.out_depth;
       this.out_sx = json.out_sx;
       this.out_sy = json.out_sy;
-      this.layer_type = json.layer_type; 
+      this.layer_type = json.layer_type;
       this.group_size = json.group_size;
       this.switches = global.zeros(this.group_size);
     }
@@ -231,7 +231,7 @@
     return (y - 1) / (y + 1);
   }
   // Implements Tanh nnonlinearity elementwise
-  // x -> tanh(x) 
+  // x -> tanh(x)
   // so the output is between -1 and 1.
   var TanhLayer = function(opt) {
     var opt = opt || {};
@@ -247,7 +247,7 @@
       this.in_act = V;
       var V2 = V.cloneAndZero();
       var N = V.w.length;
-      for(var i=0;i<N;i++) { 
+      for(var i=0;i<N;i++) {
         V2.w[i] = tanh(V.w[i]);
       }
       this.out_act = V2;
@@ -278,10 +278,10 @@
       this.out_depth = json.out_depth;
       this.out_sx = json.out_sx;
       this.out_sy = json.out_sy;
-      this.layer_type = json.layer_type; 
+      this.layer_type = json.layer_type;
     }
   }
-  
+
   global.TanhLayer = TanhLayer;
   global.MaxoutLayer = MaxoutLayer;
   global.ReluLayer = ReluLayer;

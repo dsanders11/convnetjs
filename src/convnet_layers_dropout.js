@@ -44,7 +44,7 @@
       var N = V.w.length;
       V.dw = global.zeros(N); // zero out gradient wrt data
       for(var i=0;i<N;i++) {
-        if(!(this.dropped[i])) { 
+        if(!(this.dropped[i])) {
           V.dw[i] = chain_grad.dw[i]; // copy over the gradient
         }
       }
@@ -65,11 +65,11 @@
       this.out_depth = json.out_depth;
       this.out_sx = json.out_sx;
       this.out_sy = json.out_sy;
-      this.layer_type = json.layer_type; 
+      this.layer_type = json.layer_type;
       this.drop_prob = json.drop_prob;
     }
   }
-  
+
 
   global.DropoutLayer = DropoutLayer;
 })(convnetjs);

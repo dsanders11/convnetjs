@@ -1,9 +1,9 @@
 (function(global) {
   "use strict";
   var Vol = global.Vol; // convenience
-  
-  // Layers that implement a loss. Currently these are the layers that 
-  // can initiate a backward() pass. In future we probably want a more 
+
+  // Layers that implement a loss. Currently these are the layers that
+  // can initiate a backward() pass. In future we probably want a more
   // flexible system that can accomodate multiple losses to do multi-task
   // learning, and stuff like that. But for now, one of the layers in this
   // file must be the final layer in a Net.
@@ -69,7 +69,7 @@
       // loss is the class negative log likelihood
       return -Math.log(this.es[y]);
     },
-    getParamsAndGrads: function() { 
+    getParamsAndGrads: function() {
       return [];
     },
     toJSON: function() {
@@ -112,9 +112,9 @@
     },
     // y is a list here of size num_inputs
     // or it can be a number if only one value is regressed
-    // or it can be a struct {dim: i, val: x} where we only want to 
+    // or it can be a struct {dim: i, val: x} where we only want to
     // regress on dimension i and asking it to have value x
-    backward: function(y) { 
+    backward: function(y) {
 
       // compute and accumulate gradient wrt weights and bias of this layer
       var x = this.in_act;
@@ -142,7 +142,7 @@
       }
       return loss;
     },
-    getParamsAndGrads: function() { 
+    getParamsAndGrads: function() {
       return [];
     },
     toJSON: function() {
@@ -187,7 +187,7 @@
       x.dw = global.zeros(x.w.length); // zero out the gradient of input Vol
 
       // we're using structured loss here, which means that the score
-      // of the ground truth should be higher than the score of any other 
+      // of the ground truth should be higher than the score of any other
       // class, by a margin
       var yscore = x.w[y]; // score of ground truth
       var margin = 1.0;
@@ -205,7 +205,7 @@
 
       return loss;
     },
-    getParamsAndGrads: function() { 
+    getParamsAndGrads: function() {
       return [];
     },
     toJSON: function() {
@@ -225,7 +225,7 @@
       this.num_inputs = json.num_inputs;
     }
   }
-  
+
   global.RegressionLayer = RegressionLayer;
   global.SoftmaxLayer = SoftmaxLayer;
   global.SVMLayer = SVMLayer;
