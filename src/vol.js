@@ -60,7 +60,8 @@ goog.scope(function() {
       }
     }
   };
-  var pro = convnetjs.Vol.prototype;
+  var Vol = convnetjs.Vol;
+  var pro = Vol.prototype;
 
   /**
    * @param {number} x x coordinate
