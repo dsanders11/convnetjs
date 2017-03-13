@@ -25,7 +25,7 @@ goog.scope(function() {
   pro.backward = function(y) {
     // compute and accumulate gradient wrt weights and bias of this layer
     var x = this.in_act;
-    x['dw'] = new Float64Array(x['w'].length); // zero out the gradient of input Vol
+    x['dw'].fill(0); // zero out gradient wrt bottom data, we're about to fill it
     var loss = 0.0;
     if(y instanceof Array || y instanceof Float64Array) {
       for(var i=0;i<this.out_depth;i++) {

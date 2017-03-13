@@ -181,10 +181,7 @@ goog.scope(function() {
    */
   pro.clone = function() {
     var V = new Vol(this.sx, this.sy, this.depth, 0.0);
-    var n = this['w'].length;
-    for(var i=0;i<n;i++) {
-      V['w'][i] = this['w'][i];
-    }
+    V['w'] = this['w'].slice();
     return V;
   };
 

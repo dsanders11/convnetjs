@@ -1,5 +1,6 @@
 goog.provide('convnetjs.ReluLayer');
 goog.require('convnetjs.Layer');
+goog.require('convnetjs.Vol');
 
 
 goog.scope(function() {
@@ -34,14 +35,19 @@ goog.scope(function() {
    */
   pro.forward = function(V, is_training) {
     this.in_act = V;
-    var V2 = V.clone();
-    var N = V['w'].length;
-    var V2w = V2['w'];
-    for(var i=0;i<N;i++) {
-      if(V2w[i] < 0) V2w[i] = 0; // threshold at 0
+    if (this.out_act === null) {
+      this.out_act = new convnetjs.Vol(V.sx, V.sy, V.depth, 0.0);
+    } else {
+      // It already exists so copy it for a clone
+      this.out_act['w'] = V['w'].slice();
     }
-    this.out_act = V2;
-    return this.out_act;
+    var A = this.out_act;
+    var N = V['w'].length;
+    var A_w = A['w'];
+    for(var i=0;i<N;i++) {
+      if(A_w[i] < 0) A_w[i] = 0; // threshold at 0
+    }
+    return A;
   };
 
   /**
@@ -49,12 +55,13 @@ goog.scope(function() {
    */
   pro.backward = function() {
     var V = this.in_act; // we need to set dw of this
+    var V_dw = V['dw'];
     var V2 = this.out_act;
     var N = V['w'].length;
-    V['dw'] = new Float64Array(N); // zero out gradient wrt data
+    V['dw'].fill(0); // zero out gradient wrt bottom data, we're about to fill it
     for(var i=0;i<N;i++) {
-      if(V2['w'][i] <= 0) V['dw'][i] = 0; // threshold
-      else V['dw'][i] = V2['dw'][i];
+      if(V2['w'][i] <= 0) V_dw[i] = 0; // threshold
+      else V_dw[i] = V2['dw'][i];
     }
   };
 });

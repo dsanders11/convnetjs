@@ -49,7 +49,13 @@ goog.scope(function() {
    */
   pro.forward = function(V, is_training) {
     this.in_act = V;
-    var A = new Vol(1, 1, this.out_depth, 0.0);
+    if (this.out_act === null) {
+      this.out_act = new convnetjs.Vol(1, 1, this.out_depth, 0.0);
+    } else {
+      // It already exists so zero it
+      this.out_act['w'].fill(0);
+    }
+    var A = this.out_act;
     var Vw = V['w'];
     for(var i=0;i<this.out_depth;i++) {
       var a = 0.0;
@@ -60,21 +66,21 @@ goog.scope(function() {
       a += this.biases['w'][i];
       A['w'][i] = a;
     }
-    this.out_act = A;
-    return this.out_act;
+    return A;
   };
 
   /**
    * @override
    */
   pro.backward = function() {
+    var A = this.out_act;
     var V = this.in_act;
-    V['dw'] = new Float64Array(V['w'].length); // zero out the gradient in input Vol
+    V['dw'].fill(0); // zero out gradient wrt bottom data, we're about to fill it
 
     // compute gradient wrt weights and data
     for(var i=0;i<this.out_depth;i++) {
       var tfi = this.filters[i];
-      var chain_grad = this.out_act['dw'][i];
+      var chain_grad = A['dw'][i];
       for(var d=0;d<this.num_inputs;d++) {
         V['dw'][d] += tfi['w'][d]*chain_grad; // grad wrt input data
         tfi['dw'][d] += V['w'][d]*chain_grad; // grad wrt params

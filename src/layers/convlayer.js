@@ -62,41 +62,55 @@ goog.scope(function() {
   pro.forward = function(V, is_training) {
     // optimized code by @mdda that achieves 2x speedup over previous version
     this.in_act = V;
-    var A = new convnetjs.Vol(this.out_sx |0, this.out_sy |0, this.out_depth |0, 0.0);
+    if (this.out_act === null) {
+      this.out_act = new convnetjs.Vol(this.out_sx |0, this.out_sy |0, this.out_depth |0, 0.0);
+    } else {
+      // It already exists so zero it
+      this.out_act['w'].fill(0);
+    }
+    var A = this.out_act;
 
+    var V_w = V['w'];
     var V_sx = V.sx |0;
     var V_sy = V.sy |0;
+    var V_depth = V.depth;
     var xy_stride = this.stride |0;
+    var neg_pad = -this.pad |0;
+    var biases_w = this.biases['w'];
 
     for(var d=0;d<this.out_depth;d++) {
       var f = this.filters[d];
-      var x = -this.pad |0;
-      var y = -this.pad |0;
+      var f_sx = f.sx;
+      var f_sy = f.sy;
+      var f_depth = f.depth;
+      var f_w = f['w'];
+      var y = neg_pad;
       for(var ay=0; ay<this.out_sy; y+=xy_stride,ay++) {  // xy_stride
-        x = -this.pad |0;
+        let x = neg_pad;
         for(var ax=0; ax<this.out_sx; x+=xy_stride,ax++) {  // xy_stride
 
           // convolve centered at this particular location
           var a = 0.0;
-          for(var fy=0;fy<f.sy;fy++) {
+          for(var fy=0;fy<f_sy;fy++) {
             var oy = y+fy; // coordinates in the original input array coordinates
-            for(var fx=0;fx<f.sx;fx++) {
+            for(var fx=0;fx<f_sx;fx++) {
               var ox = x+fx;
               if(oy>=0 && oy<V_sy && ox>=0 && ox<V_sx) {
-                for(var fd=0;fd<f.depth;fd++) {
+                var t1 = ((f_sx * fy)+fx)*f_depth;
+                var t2 = ((V_sx * oy)+ox)*V_depth;
+                for(var fd=0;fd<f_depth;fd++) {
                   // avoid function call overhead (x2) for efficiency, compromise modularity :(
-                  a += f['w'][((f.sx * fy)+fx)*f.depth+fd] * V['w'][((V_sx * oy)+ox)*V.depth+fd];
+                  a += f_w[t1+fd] * V_w[t2+fd];
                 }
               }
             }
           }
-          a += this.biases['w'][d];
+          a += biases_w[d];
           A.set(ax, ay, d, a);
         }
       }
     }
-    this.out_act = A;
-    return this.out_act;
+    return A;
   };
 
   /**
@@ -104,38 +118,49 @@ goog.scope(function() {
    */
   pro.backward = function() {
     var V = this.in_act;
-    V['dw'] = new Float64Array(V['w'].length); // zero out gradient wrt bottom data, we're about to fill it
+    var A = this.out_act;
+    V['dw'].fill(0); // zero out gradient wrt bottom data, we're about to fill it
 
+    var V_dw = V['dw'];
     var V_sx = V.sx |0;
     var V_sy = V.sy |0;
+    var V_depth = V.depth;
     var xy_stride = this.stride |0;
+    var neg_pad = -this.pad |0;
+    var biases_dw = this.biases['dw'];
 
     for(var d=0;d<this.out_depth;d++) {
       var f = this.filters[d];
-      var x = -this.pad |0;
-      var y = -this.pad |0;
+      var f_sx = f.sx;
+      var f_sy = f.sy;
+      var f_depth = f.depth;
+      var f_dw = f['dw'];
+      var f_w = f['w'];
+      var y = neg_pad;
       for(var ay=0; ay<this.out_sy; y+=xy_stride,ay++) {  // xy_stride
-        x = -this.pad |0;
+        let x = neg_pad;
         for(var ax=0; ax<this.out_sx; x+=xy_stride,ax++) {  // xy_stride
 
           // convolve centered at this particular location
-          var chain_grad = this.out_act.get_grad(ax,ay,d); // gradient from above, from chain rule
-          for(var fy=0;fy<f.sy;fy++) {
+          var chain_grad = A.get_grad(ax,ay,d); // gradient from above, from chain rule
+          for(var fy=0;fy<f_sy;fy++) {
             var oy = y+fy; // coordinates in the original input array coordinates
-            for(var fx=0;fx<f.sx;fx++) {
+            for(var fx=0;fx<f_sx;fx++) {
               var ox = x+fx;
               if(oy>=0 && oy<V_sy && ox>=0 && ox<V_sx) {
-                for(var fd=0;fd<f.depth;fd++) {
+                var t1 = ((V_sx * oy)+ox)*V_depth;
+                var t2 = ((f_sx * fy)+fx)*f_depth;
+                for(var fd=0;fd<f_depth;fd++) {
                   // avoid function call overhead (x2) for efficiency, compromise modularity :(
-                  var ix1 = ((V_sx * oy)+ox)*V.depth+fd;
-                  var ix2 = ((f.sx * fy)+fx)*f.depth+fd;
-                  f['dw'][ix2] += V['w'][ix1]*chain_grad;
-                  V['dw'][ix1] += f['w'][ix2]*chain_grad;
+                  var ix1 = t1+fd;
+                  var ix2 = t2+fd;
+                  f_dw[ix2] += V_dw[ix1]*chain_grad;
+                  V_dw[ix1] += f_w[ix2]*chain_grad;
                 }
               }
             }
           }
-          this.biases['dw'][d] += chain_grad;
+          biases_dw[d] += chain_grad;
         }
       }
     }

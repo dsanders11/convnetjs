@@ -51,7 +51,13 @@ goog.scope(function() {
   pro.forward = function(V, is_training) {
     this.in_act = V;
 
-    var A = new convnetjs.Vol(this.out_sx, this.out_sy, this.out_depth, 0.0);
+    if (this.out_act === null) {
+      this.out_act = new convnetjs.Vol(this.out_sx, this.out_sy, this.out_depth, 0.0);
+    } else {
+      // It already exists so zero it
+      this.out_act['w'].fill(0);
+    }
+    var A = this.out_act;
 
     var n=0; // a counter for switches
     for(var d=0;d<this.out_depth;d++) {
@@ -65,9 +71,9 @@ goog.scope(function() {
           let winx=-1;
           let winy=-1;
           for(var fx=0;fx<this.sx;fx++) {
+            let ox = x+fx;
             for(var fy=0;fy<this.sy;fy++) {
               let oy = y+fy;
-              let ox = x+fx;
               if(oy>=0 && oy<V.sy && ox>=0 && ox<V.sx) {
                 let v = V.get(ox, oy, d);
                 // perform max pooling and store pointers to where
@@ -88,7 +94,6 @@ goog.scope(function() {
         }
       }
     }
-    this.out_act = A;
     return this.out_act;
   };
 
@@ -99,7 +104,7 @@ goog.scope(function() {
     // pooling layers have no parameters, so simply compute
     // gradient wrt data here
     var V = this.in_act;
-    V['dw'] = new Float64Array(V['w'].length); // zero out gradient wrt data
+    V['dw'].fill(0); // zero out gradient wrt bottom data, we're about to fill it
 
     var n = 0;
     for(var d=0;d<this.out_depth;d++) {
