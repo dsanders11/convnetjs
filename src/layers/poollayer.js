@@ -94,7 +94,7 @@ goog.scope(function() {
         }
       }
     }
-    return this.out_act;
+    return A;
   };
 
   /**
@@ -103,21 +103,17 @@ goog.scope(function() {
   pro.backward = function() {
     // pooling layers have no parameters, so simply compute
     // gradient wrt data here
+    var A = this.out_act;
     var V = this.in_act;
     V['dw'].fill(0); // zero out gradient wrt bottom data, we're about to fill it
 
     var n = 0;
     for(var d=0;d<this.out_depth;d++) {
-      var x = -this.pad;
-      var y = -this.pad;
-      for(var ax=0; ax<this.out_sx; x+=this.stride,ax++) {
-        y = -this.pad;
-        for(var ay=0; ay<this.out_sy; y+=this.stride,ay++) {
-
-          var chain_grad = this.out_act.get_grad(ax,ay,d);
+      for(var ax=0; ax<this.out_sx; ax++) {
+        for(var ay=0; ay<this.out_sy; ay++) {
+          var chain_grad = A.get_grad(ax,ay,d);
           V.add_grad(this.switchx[n], this.switchy[n], d, chain_grad);
           n++;
-
         }
       }
     }
