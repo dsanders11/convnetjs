@@ -5,6 +5,7 @@
 goog.provide('convnetjs.Net');
 goog.require('convnetjs.ConvLayer');
 goog.require('convnetjs.DropoutLayer');
+goog.require('convnetjs.EluLayer');
 goog.require('convnetjs.FullyConnLayer');
 goog.require('convnetjs.InputLayer');
 goog.require('convnetjs.JSONSerializable');
@@ -83,7 +84,8 @@ goog.scope(function() {
         new_defs.push(def);
 
         if(typeof def['activation'] !== 'undefined') {
-          if(def['activation']==='relu') { new_defs.push({'type':'relu'}); }
+          if (def['activation']==='relu') { new_defs.push({'type':'relu'}); }
+          else if (def['activation']==='elu') { new_defs.push({'type':'elu'}); }
           else if (def['activation']==='sigmoid') { new_defs.push({'type':'sigmoid'}); }
           else if (def['activation']==='tanh') { new_defs.push({'type':'tanh'}); }
           else if (def['activation']==='maxout') {
@@ -122,6 +124,7 @@ goog.scope(function() {
         case 'regression': this.layers.push(new convnetjs.RegressionLayer(def)); break;
         case 'conv': this.layers.push(new convnetjs.ConvLayer(def)); break;
         case 'pool': this.layers.push(new convnetjs.PoolLayer(def)); break;
+        case 'elu': this.layers.push(new convnetjs.EluLayer(def)); break;
         case 'relu': this.layers.push(new convnetjs.ReluLayer(def)); break;
         case 'sigmoid': this.layers.push(new convnetjs.SigmoidLayer(def)); break;
         case 'tanh': this.layers.push(new convnetjs.TanhLayer(def)); break;
@@ -246,6 +249,7 @@ goog.scope(function() {
       var t = /** @type {string} */ (Lj['layer_type']);
       var L;
       if(t==='input') { L = new convnetjs.InputLayer(); }
+      if(t==='elu') { L = new convnetjs.EluLayer(); }
       if(t==='relu') { L = new convnetjs.ReluLayer(); }
       if(t==='sigmoid') { L = new convnetjs.SigmoidLayer(); }
       if(t==='tanh') { L = new convnetjs.TanhLayer(); }
